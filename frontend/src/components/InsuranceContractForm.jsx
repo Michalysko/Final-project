@@ -9,7 +9,11 @@ const emptyFormData = {
     valid_until: '',
 };
 
-function InsuranceContractForm({ authToken, onInsuranceContractCreated }) {
+function InsuranceContractForm({ authToken, 
+    onInsuranceContractCreated,
+    editingContract,
+    onInsuranceContractUpdated
+ }) {
     const [formData, setFormData] = useState(emptyFormData);
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [insuranceTypes, setInsuranceTypes] = useState([]);
@@ -42,6 +46,20 @@ function InsuranceContractForm({ authToken, onInsuranceContractCreated }) {
             });
     }, [authToken]);
 
+    useEffect(() => {
+        if (editingContract) {
+            setFormData({
+                insured_person: editingContract.insured_person || '',
+                insurance_type: editingContract.insurance_type || '',
+                amount: editingContract.amount || '',
+                contract_date: editingContract.contract_date || '',
+                valid_until: editingContract.valid_until || '',
+            });
+        } else {
+            setFormData({...emptyFormData});
+        }
+    }, [editingContract]);
+
     const handelChange = (event) => {
         const { name, value } = event.target;
 
@@ -69,8 +87,14 @@ function InsuranceContractForm({ authToken, onInsuranceContractCreated }) {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch('http://127.0.0.1:8000/api/insurance-contracts/', {
-            method: 'POST',
+        const url = editingContract
+            ? `http://127.0.0.1:8000/api/insurance-contracts/${editingContract.id}/`
+            : 'http://127.0.0.1:8000/api/insurance-contracts/';
+
+        const method = editingContract ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
             headers: {
                 'Content-type': 'application/json',
                 Authorization: `Token ${authToken}`
@@ -83,8 +107,12 @@ function InsuranceContractForm({ authToken, onInsuranceContractCreated }) {
             }),
         })
         .then((response) => response.json())
-        .then((createInsuranceContract) => {
-            onInsuranceContractCreated(createInsuranceContract);
+        .then((savedInsuranceContract) => {
+            if (editingContract) {
+                onInsuranceContractUpdated(savedInsuranceContract);
+            } else {
+                onInsuranceContractCreated(savedInsuranceContract);
+            }
             setFormData({...emptyFormData});
         })
         .catch((error) => {
@@ -94,7 +122,7 @@ function InsuranceContractForm({ authToken, onInsuranceContractCreated }) {
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
-            <h2>Add Insurance Contract</h2>
+            <h2>{editingContract ? 'Edit Insurance Contract' : 'Add Insurance Contract'}</h2>
 
             <div className="form-grid">
                 <label>
@@ -163,7 +191,9 @@ function InsuranceContractForm({ authToken, onInsuranceContractCreated }) {
                 </label>
             </div>
 
-            <button type="submit">Add contract</button>
+            <button type="submit">
+                {editingContract ? 'Save changes' : 'Add contract'}
+            </button>
         </form>
     );
 }

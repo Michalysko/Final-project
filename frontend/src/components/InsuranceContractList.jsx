@@ -1,7 +1,11 @@
 function InsuranceContractList({
-    insuranceContracts, onInsuranceContractDelete,
+    insuranceContracts,
+    onInsuranceContractEdit,
+    onInsuranceContractDelete,
 }) {
+    const canEdit = Boolean(onInsuranceContractEdit);
     const canDelete = Boolean(onInsuranceContractDelete);
+    const hasActions = canEdit || canDelete;
 
     if (insuranceContracts.lenght === 0) {
         return <p>No insurance contracts found.</p>;
@@ -17,7 +21,7 @@ function InsuranceContractList({
                     <th>Amount</th>
                     <th>Contract date</th>
                     <th>Valid until</th>
-                    {canDelete && <th>Actions</th>}
+                    {hasActions && <th>Actions</th>}
                 </tr>
             </thead>
             <tbody>
@@ -29,19 +33,30 @@ function InsuranceContractList({
                         <td>{contract.amount}</td>
                         <td>{contract.contract_date}</td>
                         <td>{contract.valid_until}</td>
-                        {canDelete && (
+                        {hasActions && (
                             <td className="actions-cell">
-                                <button
-                                    type="button"
-                                    className="danger-button"
-                                    onClick={() =>
-                                        onInsuranceContractDelete(contract.id)
-                                    }
-                                >
-                                    Delete
-                                </button>
+                                {canEdit && (
+                                    <button
+                                        type="button"
+                                        className="secondary-button"
+                                        onClick={() => onInsuranceContractEdit(contract)}
+                                    >
+                                        Edit
+                                    </button>
+                                )}
+                                {canDelete && (
+                                    <button
+                                        type="button"
+                                        className="danger-button"
+                                        onClick={() =>
+                                            onInsuranceContractDelete(contract.id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+                                )}
                             </td>
-                        )}    
+                        )}
                     </tr>
                 ))}
             </tbody>

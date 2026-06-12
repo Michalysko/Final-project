@@ -5,6 +5,7 @@ import InsuranceContractList from "../components/InsuranceContractList";
 
 function InsuranceContractsPage( {authToken} ) {
     const [insuranceContracts, setInsuranceContracts] = useState([]);
+    const [editingContract, setEditingContract] = useState(null);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/insurance-contracts', {
@@ -25,6 +26,17 @@ function InsuranceContractsPage( {authToken} ) {
         setInsuranceContracts([
             ...insuranceContracts, createdInsuranceContract,
         ]);
+    };
+
+    const handleInsuranceContractUpdated = (updatedInsuranceContract) => {
+        setInsuranceContracts(
+            insuranceContracts.map((contract) => 
+            contract.id === updatedInsuranceContract.id
+                ? updatedInsuranceContract
+                : contract
+            )
+        );
+        setEditingContract(null);
     };
 
     const handleInsuranceContractDelete = (insuranceContractId) => {
@@ -55,19 +67,25 @@ function InsuranceContractsPage( {authToken} ) {
             .catch((error) => {
                 console.error('Error deleting insurance contract:', error);
             });
+        if (editingContract?.id === insuranceContractId) {
+            setEditingContract(null);
+        }
     };
 
     return (
         <section>
             <InsuranceContractForm
                 authToken={authToken}
+                editingContract={editingContract}
                 onInsuranceContractCreated={handleInsuranceContractCreated}
+                onInsuranceContractUpdated={handleInsuranceContractUpdated}
             />
 
             <h2>InsuranceContracts</h2>
 
             <InsuranceContractList 
                 insuranceContracts={insuranceContracts}
+                onInsuranceContractEdit={setEditingContract}
                 onInsuranceContractDelete={handleInsuranceContractDelete}
             />
         </section>
