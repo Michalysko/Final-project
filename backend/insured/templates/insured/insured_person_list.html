@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="cz-cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Insured People</title>
+</head>
+<body>
+    <h1>Insured People</h1>
+
+    {% if insured_people %}
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Age</th>
+                    <th>Phone number</th>
+                    <th>Insurance type</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for person in insured_people %}
+                    <tr>
+                        <td>{{ person.first_name }}</td>
+                        <td>{{ person.last_name }}</td>
+                        <td>{{ person.age }}</td>
+                        <td>{{ person.phone_number }}</td>
+                        <td>{{ person.insurance_type }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No insured people found.</p>
+    {% endif %}
+</body>
+</html>

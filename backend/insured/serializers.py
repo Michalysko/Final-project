@@ -1,0 +1,82 @@
+from rest_framework import serializers
+from .models import InsuredPerson, InsuranceContract, InsuranceType
+from django.contrib.auth.models import User
+
+class InsuranceContractSerializer(serializers.ModelSerializer):
+    insurance_type_name = serializers.CharField(
+        source='insurance_type.name',
+        read_only=True
+    )
+    insured_person_name = serializers.CharField(
+        source='insured_person.__str__',
+        read_only=True
+    )
+    insurance_type_subject = serializers.CharField(
+        source='insurance_type.subject',
+        read_only=True
+    )
+
+    class Meta:
+        model = InsuranceContract
+        fields = [
+            'id',
+            'insured_person',
+            'insured_person_name',
+            'insurance_type',
+            'insurance_type_name',
+            'insurance_type_subject',
+            'amount',
+            'contract_date',
+            'valid_until'
+        ]
+
+class InsuredPersonSerializer(serializers.ModelSerializer):
+    insurance_contracts = InsuranceContractSerializer(
+        many=True,
+        read_only=True
+    )
+
+    class Meta:
+        model = InsuredPerson
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'age',
+            'address',
+            'phone_number',
+            'insurance_contracts'
+        ]
+
+class InsuranceTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = InsuranceType
+        fields = [
+            'id',
+            'name',
+            'default_amount',
+            'subject',
+        ]
+
+class UserSerializer(serializers.ModelSerializer):
+    is_admin = serializers.SerializerMethodField()
+    insured_person_id = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'username',
+            'is_staff',
+            'is_superuser',
+            'is_admin',
+            'insured_person_id',
+        ]
+
+    def get_is_admin(self, user):
+        return user.is_superuser or user.is_staff
+
+    def get_insured_person_id(self, user):
+        if hasattr(user, 'insured_person'):
+            return user.insured_person.id
+        return None

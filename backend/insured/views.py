@@ -1,0 +1,60 @@
+from rest_framework import viewsets, status
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .permissions import IsAdminUserRole
+
+from .models import InsuredPerson, InsuranceContract, InsuranceType
+from .serializers import (
+    InsuredPersonSerializer,
+    InsuranceTypeSerializer,
+    InsuranceContractSerializer,
+    UserSerializer,
+)
+
+class InsuredPersonViewSet(viewsets.ModelViewSet):
+    queryset = InsuredPerson.objects.all()
+    serializer_class = InsuredPersonSerializer
+    permission_classes = [IsAdminUserRole]
+
+class InsuranceTypeViewSet(viewsets.ModelViewSet):
+    queryset = InsuranceType.objects.all()
+    serializer_class = InsuranceTypeSerializer
+    permission_classes = [IsAdminUserRole]
+
+class InsuranceContractViewSet(viewsets.ModelViewSet):
+    queryset = InsuranceContract.objects.all()
+    serializer_class = InsuranceContractSerializer
+    permission_classes = [IsAdminUserRole]
+
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+
+class MyProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        if not hasattr(request.user,'insured_person'):
+            return Response(
+                {'detail': 'No insured person profile is linked to this user.'},
+                status=404
+            )
+        serializer = InsuredPersonSerializer(request.user.insured_person)
+        return Response(serializer.data)
+
+class MyContractsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        if not hasattr(request.user,'insured_person'):
+            return Response(
+                {'detail': 'No insured person profile is linked to this user.'},
+                status=404
+            )
+        contracts = request.user.insured_person.insurance_contracts.all()
+        serializer = InsuranceContractSerializer(contracts, many=True)
+        return Response(serializer.data)
