@@ -1,4 +1,8 @@
-function InsuranceTypeList({ insuranceTypes, onInsuranceTypeDelete }) { 
+function InsuranceTypeList({ 
+    insuranceTypes,
+    onInsuranceTypeEdit, 
+    onInsuranceTypeDelete 
+}) { 
         if (insuranceTypes.lenght === 0) {
         return <p>No insurance types found.</p>;
     }
@@ -19,6 +23,13 @@ function InsuranceTypeList({ insuranceTypes, onInsuranceTypeDelete }) {
                         <td>{insuranceType.default_amount}</td>
                         <td>{insuranceType.subject}</td>
                         <td className="actions-cell">
+                            <button 
+                                type="button"
+                                className="secondary-button"
+                                onClick={() => onInsuranceTypeEdit(insuranceType)}
+                            >
+                                Edit
+                            </button>
                             <button 
                                 type="button"
                                 className="danger-button"

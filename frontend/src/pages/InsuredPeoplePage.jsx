@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 
-import IsuredPersonDetail from '../components/InsuredPersonDetail';
 import InsuredPersonForm from '../components/InsuredPersonForm';
 import InsuredPersonList from '../components/InsuredPersonList';
 
 function InsuredPeoplePage({ authToken }) {
     const [insuredPeople, setInsuredPeople] = useState([]);
-    const [selectedPerson, setSelectedPerson] = useState(null);
     const [editingPerson, setEditingPerson] = useState(null);
     const [searchData, setSearchData] = useState({
         name: '',
@@ -39,9 +37,6 @@ function InsuredPeoplePage({ authToken }) {
                 person.id === updatedPerson.id ? updatedPerson : person
             )
         );
-        if (selectedPerson?.id === updatedPerson.id) {
-            setSelectedPerson(updatedPerson);
-        }
         setEditingPerson(null);
     };
 
@@ -78,9 +73,6 @@ function InsuredPeoplePage({ authToken }) {
                 setInsuredPeople(
                     insuredPeople.filter((person) => person.id !== personId)
                 );
-                if (selectedPerson?.id === personId) {
-                    setSelectedPerson(null);
-                }
                 if (editingPerson?.id === personId) {
                     setEditingPerson(null)
                 }
@@ -151,11 +143,8 @@ function InsuredPeoplePage({ authToken }) {
             <h2>Insured People</h2>
             <InsuredPersonList
                 insuredPeople={filteredPeople}
-                onPersonSelect={setSelectedPerson}
                 onPersonEdit={handlePersonEdit}
                 onPersonDelete={handlePersonDelete}
-            />
-            <IsuredPersonDetail person={selectedPerson}
             />
         </section>
     );

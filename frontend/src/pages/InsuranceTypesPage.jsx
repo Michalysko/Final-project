@@ -5,6 +5,7 @@ import InsuranceTypeList from "../components/InsuranceTypeList";
 
 function InsuranceTypesPage({ authToken }) {
     const [insuranceTypes, setInsuranceTypes] = useState([]);
+    const [editingInsuranceType, setEditingInsuranceType] = useState(null)
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/insurance-types/', {
@@ -32,6 +33,17 @@ function InsuranceTypesPage({ authToken }) {
     const handleInsuranceTypeCreated = (createdInsuranceType) => {
         setInsuranceTypes([...insuranceTypes, createdInsuranceType]);
     };
+
+    const handleInsuranceTypeUpdated = (updatedInsuranceType) => {
+        setInsuranceTypes(
+            insuranceTypes.map((insuranceType) => 
+                insuranceType.id === updatedInsuranceType.id
+                    ? updatedInsuranceType
+                    : insuranceType
+            )
+        );
+        setEditingInsuranceType(null);
+    }
 
     const handleInsuranceTypeDeleted = (insuranceTypeId) => {
         const confirmed = window.confirm(
@@ -63,17 +75,23 @@ function InsuranceTypesPage({ authToken }) {
             .catch((error) => {
                 console.error('Error deleting insurance type:', error);
             });
+            if (editingInsuranceType?.id === insuranceTypeId) {
+                setEditingInsuranceType(null);
+            }
     };
     return (
         <section>
             <InsuranceTypeForm
                 authToken={authToken}
+                editingInsuranceType={editingInsuranceType}
                 onInsuranceTypeCreated={handleInsuranceTypeCreated}
+                onInsuranceTypeUpdated={handleInsuranceTypeUpdated}
             />
             <h2>Insurance Types</h2>
 
             <InsuranceTypeList
                 insuranceTypes={insuranceTypes}
+                onInsuranceTypeEdit={setEditingInsuranceType}
                 onInsuranceTypeDelete={handleInsuranceTypeDeleted}
             />
         </section>

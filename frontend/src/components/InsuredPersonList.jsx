@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
+
 function InsuredPersonList({
     insuredPeople,
-    onPersonSelect,
     onPersonEdit,
     onPersonDelete,
 }) {
@@ -21,14 +22,18 @@ function InsuredPersonList({
             <tbody>
                 {insuredPeople.map((person) => (
                     <tr key={person.id}
-                        onClick={() => onPersonSelect(person)}
-                        className="clickable-row"
                     >
                         <td>{person.first_name}</td>
                         <td>{person.last_name}</td>
                         <td>{person.age}</td>
                         <td>{person.phone_number}</td>
                         <td className="actions-cell">
+                            <Link
+                                className="secondary-button action-link"
+                                to={`/insured-people/${person.id}`}
+                            >
+                                Detail
+                            </Link>
                             <button
                                 type="button"
                                 className="secondary-button"

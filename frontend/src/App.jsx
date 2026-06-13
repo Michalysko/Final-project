@@ -7,6 +7,7 @@ import InsuredPeoplePage from './pages/InsuredPeoplePage';
 import LoginPage from './pages/LoginPage';
 import MyContractsPage from './pages/MyContractsPage';
 import MyProfilePage from './pages/MyProfilePage';
+import InsuredPersonDetailPage from './pages/InsuredPersonDetailPage';
 import './App.css';
 
 function App() {
@@ -123,6 +124,18 @@ function App() {
                         element={
                             authToken && currentUser?.is_admin ? (
                                 <InsuredPeoplePage authToken={authToken} />
+                            ) : authToken ? (
+                                <Navigate to="/my-profile" replace />
+                            ) : (
+                                <Navigate to="/login" replace />
+                            )
+                        }
+                    />
+                    <Route
+                        path='/insured-people/:personId'
+                        element={
+                            authToken && currentUser?.is_admin ? (
+                                <InsuredPersonDetailPage authToken={authToken} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (

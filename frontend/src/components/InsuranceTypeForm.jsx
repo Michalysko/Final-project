@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const emptyFormData = {
     name: '',
@@ -6,9 +6,26 @@ const emptyFormData = {
     subject: '',
 }
 
-function InsuranceTypeForm({ authToken, onInsuranceTypeCreated }) {
+function InsuranceTypeForm({ 
+    authToken, 
+    editingInsuranceType,
+    onInsuranceTypeCreated,
+    onInsuranceTypeUpdated,
+}) {
     const [formData, setFormData] = useState(emptyFormData)
 
+    useEffect(() => {
+        if (editingInsuranceType) {
+            setFormData({
+                name: editingInsuranceType.name || '',
+                default_amount: editingInsuranceType.default_amount || '',
+                subject: editingInsuranceType.subject || '',
+            });
+        } else {
+            setFormData({...emptyFormData});
+        }
+    }, [editingInsuranceType]);
+    
     const handleChange = (event) => {
         const { name, value} = event.target;
 
@@ -21,8 +38,14 @@ function InsuranceTypeForm({ authToken, onInsuranceTypeCreated }) {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        fetch('http://127.0.0.1:8000/api/insurance-types/', {
-            method: 'POST',
+        const url = editingInsuranceType
+            ? `http://127.0.0.1:8000/api/insurance-types/${editingInsuranceType.id}/`
+            : 'http://127.0.0.1:8000/api/insurance-types/';
+
+        const method = editingInsuranceType ? 'PUT' : 'POST';
+
+        fetch(url, {
+            method: method,
             headers: {
                 'Content-type': 'application/json',
                 Authorization: `Token ${authToken}`
@@ -33,9 +56,13 @@ function InsuranceTypeForm({ authToken, onInsuranceTypeCreated }) {
             }),
         })
             .then((response) => response.json())
-            .then((createdInsuranceType) => {
-                onInsuranceTypeCreated(createdInsuranceType);
-                setFormData({...emptyFormData})
+            .then((savedInsuranceType) => {
+                if (editingInsuranceType) {
+                    onInsuranceTypeUpdated(savedInsuranceType);
+                } else {
+                    onInsuranceTypeCreated(savedInsuranceType);
+                }
+                setFormData({...emptyFormData});
             })
             .catch((error) => {
                 console.error('Error creating insurance type:', error);
@@ -44,7 +71,7 @@ function InsuranceTypeForm({ authToken, onInsuranceTypeCreated }) {
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
-            <h2>Add Insurance Type</h2>
+            <h2>{editingInsuranceType ? 'Edit Insurance Type' : 'Add Insurance Type'}</h2>
 
             <div className="form-grid">
                 <label>
@@ -81,7 +108,9 @@ function InsuranceTypeForm({ authToken, onInsuranceTypeCreated }) {
                 </label>
             </div>
 
-            <button type="submit">Add insurance type</button>
+            <button type="submit">
+                {editingInsuranceType ? 'Save changes' : 'Add insurance type'}
+            </button>
         </form>
     );
 }
