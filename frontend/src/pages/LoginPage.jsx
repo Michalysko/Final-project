@@ -48,13 +48,17 @@ function LoginPage({ onLogin, t }) {
     };
 
     return (
-        <section>
-            <form className="insured-form" onSubmit={handleSubmit}>
-                <h2>{t.login}</h2>
+        <section className="login-page">
+            <form className="insured-form login-form" onSubmit={handleSubmit}>
+                <div className="login-header">
+                    <h2>{t.login}</h2>
+                </div>
+
                 {errorMessage && (
                     <p className="error-message">{errorMessage}</p>
                 )}
-                <div className="form-grid">
+
+                <div className="form-grid login-grid">
                     <label>
                         {t.username}
                         <input
@@ -75,11 +79,20 @@ function LoginPage({ onLogin, t }) {
                             required
                         />
                     </label>
-                    <p>{t.loginAsAdministrator}</p>
-                    <br/>
-                    <p>{t.username}: demo_admin</p>
-                    <p>{t.password}: superpassword2026</p>
                 </div>
+
+                <div className="demo-login-box">
+                    <p className="demo-login-title">{t.loginAsAdministrator}</p>
+                    <p>
+                        <span>{t.username}</span>
+                        <strong>demo_admin</strong>
+                    </p>
+                    <p>
+                        <span>{t.password}</span>
+                        <strong>superpassword2026</strong>
+                    </p>
+                </div>
+
                 <button type="submit">{t.login}</button>
             </form>
         </section>
