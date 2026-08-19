@@ -5,16 +5,16 @@ from .models import InsuredPerson, InsuranceContract, InsuranceType
 
 
 class InsuranceContractSerializer(serializers.ModelSerializer):
-    insurance_type_name = serializers.CharField(
-        source='insurance_type.name',
+    insurance_type_name_en = serializers.CharField(
+        source='insurance_type.name_en',
+        read_only=True
+    )
+    insurance_type_name_cs = serializers.CharField(
+        source='insurance_type.name_cs',
         read_only=True
     )
     insured_person_name = serializers.CharField(
         source='insured_person.__str__',
-        read_only=True
-    )
-    insurance_type_subject = serializers.CharField(
-        source='insurance_type.subject',
         read_only=True
     )
 
@@ -25,8 +25,9 @@ class InsuranceContractSerializer(serializers.ModelSerializer):
             'insured_person',
             'insured_person_name',
             'insurance_type',
-            'insurance_type_name',
-            'insurance_type_subject',
+            'insurance_type_name_en',
+            'insurance_type_name_cs',
+            'subject',
             'amount',
             'contract_date',
             'valid_until',
@@ -92,9 +93,9 @@ class InsuranceTypeSerializer(serializers.ModelSerializer):
         model = InsuranceType
         fields = [
             'id',
-            'name',
+            'name_en',
+            'name_cs',
             'default_amount',
-            'subject',
         ]
 
 

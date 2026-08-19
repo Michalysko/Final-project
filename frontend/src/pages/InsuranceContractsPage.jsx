@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import InsuranceContractForm from "../components/InsuranceContractForm";
 import InsuranceContractList from "../components/InsuranceContractList";
 
-function InsuranceContractsPage({ authToken, t }) {
+function InsuranceContractsPage({ authToken, t, language }) {
     const [insuranceContracts, setInsuranceContracts] = useState([]);
     const [editingContract, setEditingContract] = useState(null);
 
@@ -79,6 +79,7 @@ function InsuranceContractsPage({ authToken, t }) {
                 onInsuranceContractCreated={handleInsuranceContractCreated}
                 onInsuranceContractUpdated={handleInsuranceContractUpdated}
                 t={t}
+                language={language}
             />
 
             <h2>{t.insuranceContracts}</h2>
@@ -88,9 +89,13 @@ function InsuranceContractsPage({ authToken, t }) {
                 onInsuranceContractEdit={setEditingContract}
                 onInsuranceContractDelete={handleInsuranceContractDelete}
                 t={t}
+                language={language}
             />
         </section>
     );
 }
 
 export default InsuranceContractsPage;
+
+
+

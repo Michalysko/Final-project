@@ -154,7 +154,7 @@ function App() {
                         path="/insured-people"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuredPeoplePage authToken={authToken} t={t} />
+                                <InsuredPeoplePage authToken={authToken} t={t} language={language} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
@@ -166,7 +166,7 @@ function App() {
                         path="/insured-people/:personId"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuredPersonDetailPage authToken={authToken} t={t} />
+                                <InsuredPersonDetailPage authToken={authToken} t={t} language={language} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
@@ -178,7 +178,7 @@ function App() {
                         path="/insurance-types"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuranceTypesPage authToken={authToken} t={t} />
+                                <InsuranceTypesPage authToken={authToken} t={t} language={language} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
@@ -190,7 +190,7 @@ function App() {
                         path="/insurance-contracts"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuranceContractsPage authToken={authToken} t={t} />
+                                <InsuranceContractsPage authToken={authToken} t={t} language={language} />
                             ) : authToken ? (
                                 <Navigate to="/my-contracts" replace />
                             ) : (
@@ -206,6 +206,7 @@ function App() {
                                     authToken={authToken}
                                     currentUser={currentUser}
                                     t={t}
+                                    language={language}
                                 />
                             ) : (
                                 <Navigate to="/login" replace />
@@ -220,6 +221,7 @@ function App() {
                                     authToken={authToken}
                                     currentUser={currentUser}
                                     t={t}
+                                    language={language}
                                 />
                             ) : (
                                 <Navigate to="/login" replace />
@@ -232,3 +234,6 @@ function App() {
     );
 }
 export default App;
+
+
+

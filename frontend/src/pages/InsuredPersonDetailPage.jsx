@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import InsuredPersonDetail from '../components/InsuredPersonDetail';
 
-function InsuredPersonDetailPage({ authToken, t }) {
+function InsuredPersonDetailPage({ authToken, t, language }) {
     const { personId } = useParams();
     const [person, setPerson] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
@@ -37,9 +37,10 @@ function InsuredPersonDetailPage({ authToken, t }) {
             {errorMessage && (
                 <p className="error-message">{errorMessage}</p>
             )}
-            <InsuredPersonDetail person={person} t={t} />
+            <InsuredPersonDetail person={person} t={t} language={language} />
         </section>
     );
 }
 
 export default InsuredPersonDetailPage;
+

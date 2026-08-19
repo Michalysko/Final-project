@@ -1,10 +1,11 @@
-import { translateInsuranceTypeName } from '../translations';
+import { getInsuranceTypeName } from '../translations';
 
 function InsuranceTypeList({
     insuranceTypes,
     onInsuranceTypeEdit,
     onInsuranceTypeDelete,
     t,
+    language,
 }) {
     if (insuranceTypes.length === 0) {
         return <p>{t.noInsuranceTypes}</p>;
@@ -15,16 +16,14 @@ function InsuranceTypeList({
                 <tr>
                     <th>{t.name}</th>
                     <th>{t.defaultAmount}</th>
-                    <th>{t.subject}</th>
                     <th>{t.actions}</th>
                 </tr>
             </thead>
             <tbody>
                 {insuranceTypes.map((insuranceType) => (
                     <tr key={insuranceType.id}>
-                        <td>{translateInsuranceTypeName(insuranceType.name, t)}</td>
+                        <td>{getInsuranceTypeName(insuranceType, language)}</td>
                         <td>{insuranceType.default_amount}</td>
-                        <td>{insuranceType.subject}</td>
                         <td className="actions-cell">
                             <button
                                 type="button"
@@ -51,4 +50,3 @@ function InsuranceTypeList({
 }
 
 export default InsuranceTypeList;
-

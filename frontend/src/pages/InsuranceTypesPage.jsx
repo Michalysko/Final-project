@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import InsuranceTypeForm from "../components/InsuranceTypeForm";
 import InsuranceTypeList from "../components/InsuranceTypeList";
 
-function InsuranceTypesPage({ authToken, t }) {
+function InsuranceTypesPage({ authToken, t, language }) {
     const [insuranceTypes, setInsuranceTypes] = useState([]);
     const [editingInsuranceType, setEditingInsuranceType] = useState(null)
 
@@ -83,6 +83,7 @@ function InsuranceTypesPage({ authToken, t }) {
                 onInsuranceTypeCreated={handleInsuranceTypeCreated}
                 onInsuranceTypeUpdated={handleInsuranceTypeUpdated}
                 t={t}
+                language={language}
             />
             <h2>{t.navInsuranceTypes}</h2>
 
@@ -91,9 +92,13 @@ function InsuranceTypesPage({ authToken, t }) {
                 onInsuranceTypeEdit={setEditingInsuranceType}
                 onInsuranceTypeDelete={handleInsuranceTypeDeleted}
                 t={t}
+                language={language}
             />
         </section>
     );
 };
 
 export default InsuranceTypesPage;
+
+
+

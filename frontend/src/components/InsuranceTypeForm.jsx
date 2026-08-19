@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 const emptyFormData = {
-    name: '',
+    name_en: '',
+    name_cs: '',
     default_amount: '',
-    subject: '',
 }
 
 function InsuranceTypeForm({
@@ -18,9 +18,9 @@ function InsuranceTypeForm({
     useEffect(() => {
         if (editingInsuranceType) {
             setFormData({
-                name: editingInsuranceType.name || '',
+                name_en: editingInsuranceType.name_en || '',
+                name_cs: editingInsuranceType.name_cs || '',
                 default_amount: editingInsuranceType.default_amount || '',
-                subject: editingInsuranceType.subject || '',
             });
         } else {
             setFormData({ ...emptyFormData });
@@ -76,11 +76,21 @@ function InsuranceTypeForm({
 
             <div className="form-grid">
                 <label>
-                    {t.name}
+                    {t.nameEn}
                     <input
                         type="text"
-                        name="name"
-                        value={formData.name}
+                        name="name_en"
+                        value={formData.name_en}
+                        onChange={handleChange}
+                        required
+                    />
+                </label>
+                <label>
+                    {t.nameCs}
+                    <input
+                        type="text"
+                        name="name_cs"
+                        value={formData.name_cs}
                         onChange={handleChange}
                         required
                     />
@@ -94,16 +104,6 @@ function InsuranceTypeForm({
                         onChange={handleChange}
                         min="0"
                         step="0.01"
-                        required
-                    />
-                </label>
-                <label>
-                    {t.subject}
-                    <input
-                        type="text"
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleChange}
                         required
                     />
                 </label>

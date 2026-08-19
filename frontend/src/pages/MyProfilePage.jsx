@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import InsuredPersonDetail from "../components/InsuredPersonDetail";
 
-function MyProfilePage({ authToken, t }) {
+function MyProfilePage({ authToken, t, language }) {
     const [profile, setProfile] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -32,9 +32,10 @@ function MyProfilePage({ authToken, t }) {
             {errorMessage && (
                 <p className="error-message">{errorMessage}</p>
             )}
-            <InsuredPersonDetail person={profile} t={t} />
+            <InsuredPersonDetail person={profile} t={t} language={language} />
         </section>
     );
 }
 
 export default MyProfilePage;
+

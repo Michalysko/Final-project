@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class InsuredPerson(models.Model):
     user = models.OneToOneField(
         User,
@@ -18,13 +19,15 @@ class InsuredPerson(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+
 class InsuranceType(models.Model):
-    name = models.CharField(max_length=100)
+    name_en = models.CharField(max_length=100)
+    name_cs = models.CharField(max_length=100)
     default_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    subject = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.name
+        return self.name_en
+
 
 class InsuranceContract(models.Model):
     insured_person = models.ForeignKey(
@@ -37,9 +40,10 @@ class InsuranceContract(models.Model):
         on_delete=models.PROTECT,
         related_name="contracts"
     )
+    subject = models.CharField(max_length=255)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     contract_date = models.DateField()
     valid_until = models.DateField()
 
     def __str__(self):
-        return f"{self.insurance_type.name} - {self.insured_person}"
+        return f"{self.insurance_type.name_en} - {self.insured_person}"

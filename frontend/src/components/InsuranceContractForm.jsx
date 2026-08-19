@@ -1,9 +1,10 @@
-import { translateInsuranceTypeName } from '../translations';
+import { getInsuranceTypeName } from '../translations';
 import { useEffect, useState } from "react";
 
 const emptyFormData = {
     insured_person: '',
     insurance_type: '',
+    subject: '',
     amount: '',
     contract_date: '',
     valid_until: '',
@@ -27,6 +28,7 @@ function InsuranceContractForm({
     editingContract,
     onInsuranceContractUpdated,
     t,
+    language,
 }) {
     const [formData, setFormData] = useState({ ...emptyFormData });
     const [insuredPeople, setInsuredPeople] = useState([]);
@@ -37,6 +39,7 @@ function InsuranceContractForm({
             setFormData({
                 insured_person: editingContract.insured_person || '',
                 insurance_type: editingContract.insurance_type || '',
+                subject: editingContract.subject || '',
                 amount: editingContract.amount || '',
                 contract_date: editingContract.contract_date || '',
                 valid_until: editingContract.valid_until || '',
@@ -68,7 +71,7 @@ function InsuranceContractForm({
             .then((response) => response.json())
             .then((data) => {
                 const loadedInsuranceTypes = getApiList(data).sort((firstType, secondType) =>
-                    firstType.name.localeCompare(secondType.name)
+                    getInsuranceTypeName(firstType, language).localeCompare(getInsuranceTypeName(secondType, language))
                 );
 
                 setInsuranceTypes(loadedInsuranceTypes);
@@ -76,7 +79,7 @@ function InsuranceContractForm({
             .catch((error) => {
                 console.error('Error loading insurance types', error);
             });
-    }, [authToken]);
+    }, [authToken, language]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -170,10 +173,20 @@ function InsuranceContractForm({
                         <option value="">{t.selectInsuranceType}</option>
                         {insuranceTypes.map((insuranceType) => (
                             <option key={insuranceType.id} value={insuranceType.id}>
-                                {translateInsuranceTypeName(insuranceType.name, t)}
+                                {getInsuranceTypeName(insuranceType, language)}
                             </option>
                         ))}
                     </select>
+                </label>
+                <label>
+                    {t.subject}
+                    <input
+                        type="text"
+                        name="subject"
+                        value={formData.subject}
+                        onChange={handleChange}
+                        required
+                    />
                 </label>
                 <label>
                     {t.amount}

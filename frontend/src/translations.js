@@ -33,6 +33,8 @@ export const translations = {
         noInsuredPeople: 'No insured people found.',
         searchInsuredPeople: 'Search Insured People',
         name: 'Name',
+        nameEn: 'English name',
+        nameCs: 'Czech name',
         namePlaceholder: 'First name or last name',
         addressPlaceholder: 'Address',
         phonePlaceholder: 'Phone number',
@@ -65,22 +67,6 @@ export const translations = {
         noProfileLinked: 'No profile is linked to this account.',
         myContracts: 'My Contracts',
         noContractsLinked: 'No contracts are linked to this account.',
-        insuranceTypeNames: {
-            'Life insurance': 'Life insurance',
-            'Accident insurance': 'Accident insurance',
-            'Property insurance': 'Property insurance',
-            'Travel insurance': 'Travel insurance',
-            'Vehicle insurance': 'Vehicle insurance',
-            'Health insurance': 'Health insurance',
-            'Liability insurance': 'Liability insurance',
-            'Home insurance': 'Home insurance',
-            'Household insurance': 'Household insurance',
-            'Business insurance': 'Business insurance',
-            'Pet insurance': 'Pet insurance',
-            'Legal protection insurance': 'Legal protection insurance',
-            'Loan insurance': 'Loan insurance',
-            'Pension insurance': 'Pension insurance',
-        },
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -116,6 +102,8 @@ export const translations = {
         noInsuredPeople: 'Nebyli nalezeni žádní pojištěnci.',
         searchInsuredPeople: 'Vyhledat pojištěnce',
         name: 'Jméno',
+        nameEn: 'Anglický název',
+        nameCs: 'Český název',
         namePlaceholder: 'Jméno nebo příjmení',
         addressPlaceholder: 'Adresa',
         phonePlaceholder: 'Telefonní číslo',
@@ -148,33 +136,25 @@ export const translations = {
         noProfileLinked: 'K tomuto účtu není přiřazený žádný profil.',
         myContracts: 'Moje smlouvy',
         noContractsLinked: 'K tomuto účtu nejsou přiřazené žádné smlouvy.',
-        insuranceTypeNames: {
-            'Life insurance': 'Životní pojištění',
-            'Accident insurance': 'Úrazové pojištění',
-            'Property insurance': 'Majetkové pojištění',
-            'Travel insurance': 'Cestovní pojištění',
-            'Vehicle insurance': 'Pojištění vozidla',
-            'Health insurance': 'Zdravotní pojištění',
-            'Liability insurance': 'Pojištění odpovědnosti',
-            'Home insurance': 'Pojištění domu',
-            'Household insurance': 'Pojištění domácnosti',
-            'Business insurance': 'Podnikatelské pojištění',
-            'Pet insurance': 'Pojištění mazlíčků',
-            'Legal protection insurance': 'Pojištění právní ochrany',
-            'Loan insurance': 'Pojištění úvěru',
-            'Pension insurance': 'Penzijní pojištění',
-        },
     },
 };
 
-export function translateInsuranceTypeName(name, t) {
-    return t.insuranceTypeNames?.[name] || name;
+export function getInsuranceTypeName(insuranceType, language) {
+    if (!insuranceType) {
+        return '';
+    }
+
+    return language === 'cs'
+        ? insuranceType.name_cs || insuranceType.name_en
+        : insuranceType.name_en || insuranceType.name_cs;
 }
 
+export function getContractInsuranceTypeName(contract, language) {
+    if (!contract) {
+        return '';
+    }
 
-
-
-
-
-
-
+    return language === 'cs'
+        ? contract.insurance_type_name_cs || contract.insurance_type_name_en
+        : contract.insurance_type_name_en || contract.insurance_type_name_cs;
+}

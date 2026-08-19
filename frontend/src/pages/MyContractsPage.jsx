@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import InsuranceContractList from "../components/InsuranceContractList";
 
-function MyContractsPage({ authToken, t }) {
+function MyContractsPage({ authToken, t, language }) {
     const [contracts, setContracts] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -33,9 +33,10 @@ function MyContractsPage({ authToken, t }) {
             {errorMessage && (
                 <p className="error-message">{errorMessage}</p>
             )}
-            <InsuranceContractList insuranceContracts={contracts} t={t} />
+            <InsuranceContractList insuranceContracts={contracts} t={t} language={language} />
         </section>
     );
 }
 
 export default MyContractsPage;
+

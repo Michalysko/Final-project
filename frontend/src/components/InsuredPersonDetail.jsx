@@ -1,6 +1,6 @@
-import { translateInsuranceTypeName } from '../translations';
+import { getContractInsuranceTypeName } from '../translations';
 
-function InsuredPersonDetail({ person, t }) {
+function InsuredPersonDetail({ person, t, language }) {
     if (!person) {
         return null
     }
@@ -51,8 +51,8 @@ function InsuredPersonDetail({ person, t }) {
                     <tbody>
                         {insuranceContracts.map((contract) => (
                             <tr key={contract.id}>
-                                <td>{translateInsuranceTypeName(contract.insurance_type_name, t)}</td>
-                                <td>{contract.insurance_type_subject}</td>
+                                <td>{getContractInsuranceTypeName(contract, language)}</td>
+                                <td>{contract.subject}</td>
                                 <td>{contract.amount}</td>
                                 <td>{contract.contract_date}</td>
                                 <td>{contract.valid_until}</td>
@@ -66,5 +66,3 @@ function InsuredPersonDetail({ person, t }) {
 }
 
 export default InsuredPersonDetail;
-
-
