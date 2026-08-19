@@ -1,34 +1,37 @@
+import { translateInsuranceTypeName } from '../translations';
+
 function InsuranceContractList({
     insuranceContracts,
     onInsuranceContractEdit,
     onInsuranceContractDelete,
+    t,
 }) {
     const canEdit = Boolean(onInsuranceContractEdit);
     const canDelete = Boolean(onInsuranceContractDelete);
     const hasActions = canEdit || canDelete;
 
-    if (insuranceContracts.lenght === 0) {
-        return <p>No insurance contracts found.</p>;
+    if (insuranceContracts.length === 0) {
+        return <p>{t.noInsuranceContracts}</p>;
     }
 
     return (
         <table>
             <thead>
                 <tr>
-                    <th>Insured person</th>
-                    <th>Insurance type</th>
-                    <th>Subject</th>
-                    <th>Amount</th>
-                    <th>Contract date</th>
-                    <th>Valid until</th>
-                    {hasActions && <th>Actions</th>}
+                    <th>{t.insuredPerson}</th>
+                    <th>{t.insuranceType}</th>
+                    <th>{t.subject}</th>
+                    <th>{t.amount}</th>
+                    <th>{t.contractDate}</th>
+                    <th className="nowrap">{t.validUntil}</th>
+                    {hasActions && <th>{t.actions}</th>}
                 </tr>
             </thead>
             <tbody>
                 {insuranceContracts.map((contract) => (
                     <tr key={contract.id}>
                         <td>{contract.insured_person_name}</td>
-                        <td>{contract.insurance_type_name}</td>
+                        <td>{translateInsuranceTypeName(contract.insurance_type_name, t)}</td>
                         <td>{contract.insurance_type_subject}</td>
                         <td>{contract.amount}</td>
                         <td>{contract.contract_date}</td>
@@ -41,7 +44,7 @@ function InsuranceContractList({
                                         className="secondary-button"
                                         onClick={() => onInsuranceContractEdit(contract)}
                                     >
-                                        Edit
+                                        {t.edit}
                                     </button>
                                 )}
                                 {canDelete && (
@@ -52,7 +55,7 @@ function InsuranceContractList({
                                             onInsuranceContractDelete(contract.id)
                                         }
                                     >
-                                        Delete
+                                        {t.delete}
                                     </button>
                                 )}
                             </td>
@@ -65,3 +68,5 @@ function InsuranceContractList({
 }
 
 export default InsuranceContractList;
+
+

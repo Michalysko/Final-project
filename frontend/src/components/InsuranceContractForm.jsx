@@ -1,5 +1,5 @@
+import { translateInsuranceTypeName } from '../translations';
 import { useEffect, useState } from "react";
-import { data } from "react-router-dom";
 
 const emptyFormData = {
     insured_person: '',
@@ -9,14 +9,42 @@ const emptyFormData = {
     valid_until: '',
 };
 
-function InsuranceContractForm({ authToken, 
+const getApiList = (data) => {
+    if (Array.isArray(data)) {
+        return data;
+    }
+
+    if (Array.isArray(data.results)) {
+        return data.results;
+    }
+
+    return [];
+};
+
+function InsuranceContractForm({
+    authToken,
     onInsuranceContractCreated,
     editingContract,
-    onInsuranceContractUpdated
- }) {
-    const [formData, setFormData] = useState(emptyFormData);
+    onInsuranceContractUpdated,
+    t,
+}) {
+    const [formData, setFormData] = useState({ ...emptyFormData });
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [insuranceTypes, setInsuranceTypes] = useState([]);
+
+    useEffect(() => {
+        if (editingContract) {
+            setFormData({
+                insured_person: editingContract.insured_person || '',
+                insurance_type: editingContract.insurance_type || '',
+                amount: editingContract.amount || '',
+                contract_date: editingContract.contract_date || '',
+                valid_until: editingContract.valid_until || '',
+            });
+        } else {
+            setFormData({ ...emptyFormData });
+        }
+    }, [editingContract]);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/insured-people/', {
@@ -26,7 +54,7 @@ function InsuranceContractForm({ authToken,
         })
             .then((response) => response.json())
             .then((data) => {
-                setInsuredPeople(data);
+                setInsuredPeople(getApiList(data));
             })
             .catch((error) => {
                 console.error('Error loading insured people:', error);
@@ -39,28 +67,18 @@ function InsuranceContractForm({ authToken,
         })
             .then((response) => response.json())
             .then((data) => {
-                setInsuranceTypes(data);
+                const loadedInsuranceTypes = getApiList(data).sort((firstType, secondType) =>
+                    firstType.name.localeCompare(secondType.name)
+                );
+
+                setInsuranceTypes(loadedInsuranceTypes);
             })
             .catch((error) => {
                 console.error('Error loading insurance types', error);
             });
     }, [authToken]);
 
-    useEffect(() => {
-        if (editingContract) {
-            setFormData({
-                insured_person: editingContract.insured_person || '',
-                insurance_type: editingContract.insurance_type || '',
-                amount: editingContract.amount || '',
-                contract_date: editingContract.contract_date || '',
-                valid_until: editingContract.valid_until || '',
-            });
-        } else {
-            setFormData({...emptyFormData});
-        }
-    }, [editingContract]);
-
-    const handelChange = (event) => {
+    const handleChange = (event) => {
         const { name, value } = event.target;
 
         setFormData({
@@ -96,7 +114,7 @@ function InsuranceContractForm({ authToken,
         fetch(url, {
             method: method,
             headers: {
-                'Content-type': 'application/json',
+                'Content-Type': 'application/json',
                 Authorization: `Token ${authToken}`
             },
             body: JSON.stringify({
@@ -113,7 +131,7 @@ function InsuranceContractForm({ authToken,
             } else {
                 onInsuranceContractCreated(savedInsuranceContract);
             }
-            setFormData({...emptyFormData});
+            setFormData({ ...emptyFormData });
         })
         .catch((error) => {
             console.error('Error creating insurance contract:', error);
@@ -122,18 +140,18 @@ function InsuranceContractForm({ authToken,
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
-            <h2>{editingContract ? 'Edit Insurance Contract' : 'Add Insurance Contract'}</h2>
+            <h2>{editingContract ? t.editInsuranceContract : t.addInsuranceContract}</h2>
 
             <div className="form-grid">
                 <label>
-                    Insured person
+                    {t.insuredPerson}
                     <select
                         name="insured_person"
                         value={formData.insured_person}
-                        onChange={handelChange}
+                        onChange={handleChange}
                         required
-                        >
-                        <option value="">Select insured person</option>
+                    >
+                        <option value="">{t.selectInsuredPerson}</option>
                         {insuredPeople.map((person) => (
                             <option key={person.id} value={person.id}>
                                 {person.first_name} {person.last_name}
@@ -142,57 +160,57 @@ function InsuranceContractForm({ authToken,
                     </select>
                 </label>
                 <label>
-                    Insurance type
+                    {t.insuranceType}
                     <select
                         name="insurance_type"
                         value={formData.insurance_type}
                         onChange={handleInsuranceTypeChange}
                         required
                     >
-                        <option value="">Select insurance type</option>
+                        <option value="">{t.selectInsuranceType}</option>
                         {insuranceTypes.map((insuranceType) => (
                             <option key={insuranceType.id} value={insuranceType.id}>
-                                {insuranceType.name}
+                                {translateInsuranceTypeName(insuranceType.name, t)}
                             </option>
                         ))}
                     </select>
                 </label>
                 <label>
-                    Amount
-                    <input 
+                    {t.amount}
+                    <input
                         type="number"
                         name="amount"
                         value={formData.amount}
-                        onChange={handelChange}
+                        onChange={handleChange}
                         min="0"
                         step="0.01"
                         required
                     />
                 </label>
                 <label>
-                    Contract date
+                    {t.contractDate}
                     <input
                         type="date"
                         name="contract_date"
                         value={formData.contract_date}
-                        onChange={handelChange}
+                        onChange={handleChange}
                         required
                     />
                 </label>
                 <label>
-                    Valid until
+                    {t.validUntil}
                     <input
                         type="date"
                         name="valid_until"
                         value={formData.valid_until}
-                        onChange={handelChange}
+                        onChange={handleChange}
                         required
                     />
                 </label>
             </div>
 
             <button type="submit">
-                {editingContract ? 'Save changes' : 'Add contract'}
+                {editingContract ? t.saveChanges : t.addContract}
             </button>
         </form>
     );

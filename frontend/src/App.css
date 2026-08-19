@@ -154,7 +154,7 @@ button:hover {
   background-color: #b91c1c;
 }
 
-.action-cell {
+.actions-cell {
   display: flex;
   gap: 8px;
 }
@@ -226,4 +226,58 @@ button:hover {
 
 .back-link:hover {
   text-decoration: underline;
+}
+
+
+.form-grid-spacer {
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .form-grid-spacer {
+    display: none;
+  }
+}
+
+.app-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.language-switcher {
+  display: inline-flex;
+  flex-shrink: 0;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+}
+
+.language-button {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 0;
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+.language-button:hover {
+  background-color: #e2e8f0;
+}
+
+.language-button.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+@media (max-width: 700px) {
+  .app-header-top {
+    flex-direction: column;
+  }
+}
+
+
+.nowrap {
+  white-space: nowrap;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const emptyFormData = {
     first_name: '',
@@ -6,28 +6,36 @@ const emptyFormData = {
     age: '',
     address: '',
     phone_number: '',
+    username: '',
+    password: '',
 }
 
 function InsuredPersonForm({
     authToken,
     editingPerson,
     onPersonCreated,
-    onPersonUpdated
+    onPersonUpdated,
+    t,
 }) {
-    const [formData, setFormData] = useState(emptyFormData);
+    const [formData, setFormData] = useState({ ...emptyFormData });
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         if (editingPerson) {
             setFormData({
-                first_name: editingPerson.first_name,
-                last_name: editingPerson.last_name,
-                age: editingPerson.age,
-                address: editingPerson.address,
-                phone_number: editingPerson.phone_number,
+                first_name: editingPerson.first_name || '',
+                last_name: editingPerson.last_name || '',
+                age: editingPerson.age || '',
+                address: editingPerson.address || '',
+                phone_number: editingPerson.phone_number || '',
+                username: '',
+                password: '',
             });
         } else {
-            setFormData(emptyFormData)
+            setFormData({ ...emptyFormData });
         }
+
+        setErrorMessage('');
     }, [editingPerson]);
 
     const handleChange = (event) => {
@@ -41,12 +49,26 @@ function InsuredPersonForm({
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setErrorMessage('');
 
         const url = editingPerson
             ? `http://127.0.0.1:8000/api/insured-people/${editingPerson.id}/`
             : 'http://127.0.0.1:8000/api/insured-people/';
 
-        const method = editingPerson ? 'PUT' : 'POST'
+        const method = editingPerson ? 'PUT' : 'POST';
+
+        const requestData = {
+            first_name: formData.first_name,
+            last_name: formData.last_name,
+            age: Number(formData.age),
+            address: formData.address,
+            phone_number: formData.phone_number,
+        };
+
+        if (!editingPerson) {
+            requestData.username = formData.username;
+            requestData.password = formData.password;
+        }
 
         fetch(url, {
             method: method,
@@ -54,32 +76,40 @@ function InsuredPersonForm({
                 'Content-Type': 'application/json',
                 Authorization: `Token ${authToken}`
             },
-            body: JSON.stringify({
-                ...formData,
-                age: Number(formData.age),
-            }),
+            body: JSON.stringify(requestData),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Save request failed');
+                }
+
+                return response.json();
+            })
             .then((savedPerson) => {
                 if (editingPerson) {
                     onPersonUpdated(savedPerson);
                 } else {
                     onPersonCreated(savedPerson);
                 }
-                setFormData(emptyFormData);
+                setFormData({ ...emptyFormData });
             })
             .catch((error) => {
                 console.error('Error saving insured person:', error);
+                setErrorMessage(t.unableToSavePerson);
             });
     };
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
-            <h2>{editingPerson ? 'Edit insured person' : 'Add Insured Person'}</h2>
+            <h2>{editingPerson ? t.editInsuredPerson : t.addInsuredPerson}</h2>
+
+            {errorMessage && (
+                <p className="error-message">{errorMessage}</p>
+            )}
 
             <div className="form-grid">
                 <label>
-                    First name
+                    {t.firstName}
                     <input
                         type="text"
                         name="first_name"
@@ -89,7 +119,7 @@ function InsuredPersonForm({
                     />
                 </label>
                 <label>
-                    Last name
+                    {t.lastName}
                     <input
                         type="text"
                         name="last_name"
@@ -99,7 +129,7 @@ function InsuredPersonForm({
                     />
                 </label>
                 <label>
-                    Age
+                    {t.age}
                     <input
                         type="number"
                         name="age"
@@ -110,7 +140,7 @@ function InsuredPersonForm({
                     />
                 </label>
                 <label>
-                    Address
+                    {t.address}
                     <input
                         type="text"
                         name="address"
@@ -120,7 +150,7 @@ function InsuredPersonForm({
                     />
                 </label>
                 <label>
-                    Phone number
+                    {t.phoneNumber}
                     <input
                         type="text"
                         name="phone_number"
@@ -129,10 +159,39 @@ function InsuredPersonForm({
                         required
                     />
                 </label>
+
+                {!editingPerson && (
+                    <div className="form-grid-spacer" aria-hidden="true"></div>
+                )}
+
+                {!editingPerson && (
+                    <>
+                        <label>
+                            {t.username}
+                            <input
+                                type="text"
+                                name="username"
+                                value={formData.username}
+                                onChange={handleChange}
+                                required
+                            />
+                        </label>
+                        <label>
+                            {t.password}
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                required
+                            />
+                        </label>
+                    </>
+                )}
             </div>
 
             <button type="submit">
-                {editingPerson ? 'Save changes' : 'Add person'}
+                {editingPerson ? t.saveChanges : t.addPerson}
             </button>
         </form>
 

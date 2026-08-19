@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { NavLink, Navigate, Route, Routes, data, replace } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 
 import InsuranceContractsPage from './pages/InsuranceContractsPage';
 import InsuranceTypesPage from './pages/InsuranceTypesPage';
@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import MyContractsPage from './pages/MyContractsPage';
 import MyProfilePage from './pages/MyProfilePage';
 import InsuredPersonDetailPage from './pages/InsuredPersonDetailPage';
+import { translations } from './translations';
 import './App.css';
 
 function App() {
@@ -15,6 +16,16 @@ function App() {
         localStorage.getItem('authToken')
     );
     const [currentUser, setCurrentUser] = useState(null);
+    const [language, setLanguage] = useState(
+        localStorage.getItem('language') || 'en'
+    );
+
+    const t = translations[language];
+
+    const handleLanguageChange = (selectedLanguage) => {
+        setLanguage(selectedLanguage);
+        localStorage.setItem('language', selectedLanguage);
+    };
 
     const handleLogin = (token) => {
         setAuthToken(token);
@@ -31,6 +42,7 @@ function App() {
             setCurrentUser(null);
             return;
         }
+
         fetch('http://127.0.0.1:8000/api/me/', {
             headers: {
                 Authorization: `Token ${authToken}`,
@@ -43,13 +55,12 @@ function App() {
                 return response.json();
             })
             .then((data) => {
-                console.log('Current user:', data);
                 setCurrentUser(data);
             })
             .catch((error) => {
                 console.error('Error loading current user:', error);
                 localStorage.removeItem('authToken');
-                setAuthToken(null)
+                setAuthToken(null);
                 setCurrentUser(null);
             });
     }, [authToken]);
@@ -57,37 +68,57 @@ function App() {
     return (
         <main className="app">
             <section className="app-container">
-                <header className='app-header'>
-                    <h1>Insurance App</h1>
+                <header className="app-header">
+                    <div className="app-header-top">
+                        <div>
+                            <h1>{t.appTitle}</h1>
 
-                    {currentUser && (
-                        <p className='user-info'>
-                            Logged in as {currentUser.username}
-                        </p>
-                    )}
+                            {currentUser && (
+                                <p className="user-info">
+                                    {t.loggedInAs} {currentUser.username}
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="language-switcher" aria-label={t.languageLabel}>
+                            <button
+                                type="button"
+                                className={language === 'cs' ? 'language-button active' : 'language-button'}
+                                onClick={() => handleLanguageChange('cs')}
+                            >
+                                {t.czech}
+                            </button>
+                            <button
+                                type="button"
+                                className={language === 'en' ? 'language-button active' : 'language-button'}
+                                onClick={() => handleLanguageChange('en')}
+                            >
+                                {t.english}
+                            </button>
+                        </div>
+                    </div>
 
                     {authToken && currentUser && (
-
-                        <nav className='main-nav'>
+                        <nav className="main-nav">
                             {currentUser.is_admin ? (
                                 <>
-                                    <NavLink to="/insured-people">Insured People</NavLink>
-                                    <NavLink to="/insurance-types">Insurance Types</NavLink>
-                                    <NavLink to="/insurance-contracts">Insurance Contracts</NavLink>
+                                    <NavLink to="/insured-people">{t.navInsuredPeople}</NavLink>
+                                    <NavLink to="/insurance-types">{t.navInsuranceTypes}</NavLink>
+                                    <NavLink to="/insurance-contracts">{t.navInsuranceContracts}</NavLink>
                                 </>
                             ) : (
                                 <>
-                                    <NavLink to="/my-profile">My Profile</NavLink>
-                                    <NavLink to="/my-contracts">My Contracts</NavLink>
+                                    <NavLink to="/my-profile">{t.navMyProfile}</NavLink>
+                                    <NavLink to="/my-contracts">{t.navMyContracts}</NavLink>
                                 </>
                             )}
 
                             <button
-                                type='button'
-                                className='secondary-button'
+                                type="button"
+                                className="secondary-button"
                                 onClick={handleLogout}
                             >
-                                Logout
+                                {t.logout}
                             </button>
                         </nav>
                     )}
@@ -95,20 +126,20 @@ function App() {
 
                 <Routes>
                     <Route
-                        path='/login'
+                        path="/login"
                         element={
                             authToken && currentUser?.is_admin ? (
                                 <Navigate to="/insured-people" replace />
                             ) : authToken && currentUser ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
-                                <LoginPage onLogin={handleLogin} />
+                                <LoginPage onLogin={handleLogin} t={t} />
                             )
                         }
                     />
 
                     <Route
-                        path='/'
+                        path="/"
                         element={
                             authToken && currentUser?.is_admin ? (
                                 <Navigate to="/insured-people" replace />
@@ -120,10 +151,10 @@ function App() {
                         }
                     />
                     <Route
-                        path='/insured-people'
+                        path="/insured-people"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuredPeoplePage authToken={authToken} />
+                                <InsuredPeoplePage authToken={authToken} t={t} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
@@ -132,10 +163,10 @@ function App() {
                         }
                     />
                     <Route
-                        path='/insured-people/:personId'
+                        path="/insured-people/:personId"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuredPersonDetailPage authToken={authToken} />
+                                <InsuredPersonDetailPage authToken={authToken} t={t} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
@@ -144,10 +175,10 @@ function App() {
                         }
                     />
                     <Route
-                        path='/insurance-types'
+                        path="/insurance-types"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuranceTypesPage authToken={authToken} />
+                                <InsuranceTypesPage authToken={authToken} t={t} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
@@ -156,37 +187,39 @@ function App() {
                         }
                     />
                     <Route
-                        path='/insurance-contracts'
+                        path="/insurance-contracts"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuranceContractsPage authToken={authToken} />
+                                <InsuranceContractsPage authToken={authToken} t={t} />
                             ) : authToken ? (
-                                <Navigate to="/my-profile" replace />
+                                <Navigate to="/my-contracts" replace />
                             ) : (
                                 <Navigate to="/login" replace />
                             )
                         }
                     />
                     <Route
-                        path='/my-profile'
+                        path="/my-profile"
                         element={
                             authToken && currentUser ? (
                                 <MyProfilePage
                                     authToken={authToken}
                                     currentUser={currentUser}
+                                    t={t}
                                 />
                             ) : (
                                 <Navigate to="/login" replace />
                             )
                         }
                     />
-                    <Route 
-                        path='/my-contracts'
+                    <Route
+                        path="/my-contracts"
                         element={
                             authToken && currentUser ? (
                                 <MyContractsPage
                                     authToken={authToken}
                                     currentUser={currentUser}
+                                    t={t}
                                 />
                             ) : (
                                 <Navigate to="/login" replace />

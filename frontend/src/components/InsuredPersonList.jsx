@@ -4,25 +4,25 @@ function InsuredPersonList({
     insuredPeople,
     onPersonEdit,
     onPersonDelete,
+    t,
 }) {
-    if (insuredPeople.lenght === 0) {
-        return <p>No insured people found.</p>;
+    if (insuredPeople.length === 0) {
+        return <p>{t.noInsuredPeople}</p>;
     }
     return (
         <table>
             <thead>
                 <tr>
-                    <th>First name</th>
-                    <th>Last name</th>
-                    <th>Age</th>
-                    <th>Phone number</th>
-                    <th>Actions</th>
+                    <th>{t.firstName}</th>
+                    <th>{t.lastName}</th>
+                    <th>{t.age}</th>
+                    <th>{t.phoneNumber}</th>
+                    <th>{t.actions}</th>
                 </tr>
             </thead>
             <tbody>
                 {insuredPeople.map((person) => (
-                    <tr key={person.id}
-                    >
+                    <tr key={person.id}>
                         <td>{person.first_name}</td>
                         <td>{person.last_name}</td>
                         <td>{person.age}</td>
@@ -32,27 +32,21 @@ function InsuredPersonList({
                                 className="secondary-button action-link"
                                 to={`/insured-people/${person.id}`}
                             >
-                                Detail
+                                {t.detail}
                             </Link>
                             <button
                                 type="button"
                                 className="secondary-button"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    onPersonEdit(person);
-                                }}
+                                onClick={() => onPersonEdit(person)}
                             >
-                                Edit
+                                {t.edit}
                             </button>
                             <button
                                 type="button"
                                 className="danger-button"
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    onPersonDelete(person.id)
-                                }}
+                                onClick={() => onPersonDelete(person.id)}
                             >
-                                Delete
+                                {t.delete}
                             </button>
                         </td>
                     </tr>

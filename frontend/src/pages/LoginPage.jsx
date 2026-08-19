@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function LoginPage({onLogin}) {
+function LoginPage({ onLogin, t }) {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -43,21 +43,21 @@ function LoginPage({onLogin}) {
             })
             .catch((error) => {
                 console.error('Error logging in:', error);
-                setErrorMessage('Invalid username or password');
+                setErrorMessage(t.invalidLogin);
             });
     };
 
     return (
         <section>
             <form className="insured-form" onSubmit={handleSubmit}>
-                <h2>Login</h2>
+                <h2>{t.login}</h2>
                 {errorMessage && (
                     <p className="error-message">{errorMessage}</p>
                 )}
                 <div className="form-grid">
                     <label>
-                        Username
-                        <input 
+                        {t.username}
+                        <input
                             type="text"
                             name="username"
                             value={formData.username}
@@ -66,7 +66,7 @@ function LoginPage({onLogin}) {
                         />
                     </label>
                     <label>
-                        Password
+                        {t.password}
                         <input
                             type="password"
                             name="password"
@@ -75,8 +75,12 @@ function LoginPage({onLogin}) {
                             required
                         />
                     </label>
+                    <p>{t.loginAsAdministrator}</p>
+                    <br/>
+                    <p>{t.username}: demo_admin</p>
+                    <p>{t.password}: superpassword2026</p>
                 </div>
-                <button type="submit">Login</button>
+                <button type="submit">{t.login}</button>
             </form>
         </section>
     );

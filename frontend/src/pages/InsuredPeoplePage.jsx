@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import InsuredPersonForm from '../components/InsuredPersonForm';
 import InsuredPersonList from '../components/InsuredPersonList';
 
-function InsuredPeoplePage({ authToken }) {
+function InsuredPeoplePage({ authToken, t }) {
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [editingPerson, setEditingPerson] = useState(null);
     const [searchData, setSearchData] = useState({
@@ -54,9 +54,7 @@ function InsuredPeoplePage({ authToken }) {
     }
 
     const handlePersonDelete = (personId) => {
-        const confirmed = window.confirm(
-            'Are you sure you want to delete this insured person?'
-        );
+        const confirmed = window.confirm(t.deletePersonConfirm);
         if (!confirmed) {
             return;
         }
@@ -99,56 +97,58 @@ function InsuredPeoplePage({ authToken }) {
     return (
         <section>
             <InsuredPersonForm
+                key={editingPerson?.id ?? 'new'}
                 authToken={authToken}
                 editingPerson={editingPerson}
                 onPersonCreated={handlePersonCreated}
                 onPersonUpdated={handlePersonUpdated}
+                t={t}
             />
             <form className="search-form">
-                <h2>Search Insured People</h2>
+                <h2>{t.searchInsuredPeople}</h2>
 
                 <div className="form-grid">
                     <label>
-                        Name
+                        {t.name}
                         <input
                             type="text"
                             name="name"
                             value={searchData.name}
                             onChange={handleSearchChange}
-                            placeholder="First name or last name"
+                            placeholder={t.namePlaceholder}
                         />
                     </label>
                     <label>
-                        Address
+                        {t.address}
                         <input
                             type="text"
                             name="address"
                             value={searchData.address}
                             onChange={handleSearchChange}
-                            placeholder="Address"
+                            placeholder={t.addressPlaceholder}
                         />
                     </label>
                     <label>
-                        Phone number
+                        {t.phoneNumber}
                         <input
                             type="text"
                             name="phone_number"
                             value={searchData.phone_number}
                             onChange={handleSearchChange}
-                            placeholder="Phone number"
+                            placeholder={t.phonePlaceholder}
                         />
                     </label>
                 </div>
             </form>
-            <h2>Insured People</h2>
+            <h2>{t.navInsuredPeople}</h2>
             <InsuredPersonList
                 insuredPeople={filteredPeople}
                 onPersonEdit={handlePersonEdit}
                 onPersonDelete={handlePersonDelete}
+                t={t}
             />
         </section>
     );
 }
 
 export default InsuredPeoplePage;
-

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { data, Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import InsuredPersonDetail from '../components/InsuredPersonDetail';
 
-function InsuredPersonDetailPage({ authToken }) {
+function InsuredPersonDetailPage({ authToken, t }) {
     const { personId } = useParams();
     const [person, setPerson] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
@@ -24,20 +24,20 @@ function InsuredPersonDetailPage({ authToken }) {
             })
             .catch((error) => {
                 console.error('Error loading insured person detail:', error);
-                setErrorMessage('Unable to  load insured person detail.');
+                setErrorMessage(t.unableToLoadPersonDetail);
             });
-    }, [authToken, personId]);
+    }, [authToken, personId, t]);
 
     return (
         <section>
             <Link className="back-link" to="/insured-people">
-                Back to insured people
+                {t.backToInsuredPeople}
             </Link>
 
             {errorMessage && (
                 <p className="error-message">{errorMessage}</p>
             )}
-            <InsuredPersonDetail person={person} />
+            <InsuredPersonDetail person={person} t={t} />
         </section>
     );
 }

@@ -1,6 +1,8 @@
-from rest_framework import serializers
-from .models import InsuredPerson, InsuranceContract, InsuranceType
 from django.contrib.auth.models import User
+from rest_framework import serializers
+
+from .models import InsuredPerson, InsuranceContract, InsuranceType
+
 
 class InsuranceContractSerializer(serializers.ModelSerializer):
     insurance_type_name = serializers.CharField(
@@ -27,10 +29,13 @@ class InsuranceContractSerializer(serializers.ModelSerializer):
             'insurance_type_subject',
             'amount',
             'contract_date',
-            'valid_until'
+            'valid_until',
         ]
 
+
 class InsuredPersonSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(write_only=True, required=False)
+    password = serializers.CharField(write_only=True, required=False)
     insurance_contracts = InsuranceContractSerializer(
         many=True,
         read_only=True
@@ -40,13 +45,47 @@ class InsuredPersonSerializer(serializers.ModelSerializer):
         model = InsuredPerson
         fields = [
             'id',
+            'username',
+            'password',
             'first_name',
             'last_name',
             'age',
             'address',
             'phone_number',
-            'insurance_contracts'
+            'insurance_contracts',
         ]
+
+    def validate_username(self, username):
+        if User.objects.filter(username=username).exists():
+            raise serializers.ValidationError('This username is already taken.')
+
+        return username
+
+    def create(self, validated_data):
+        username = validated_data.pop('username', '')
+        password = validated_data.pop('password', '')
+
+        if not username:
+            raise serializers.ValidationError({'username': 'This field is required.'})
+
+        if not password:
+            raise serializers.ValidationError({'password': 'This field is required.'})
+
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+        )
+
+        return InsuredPerson.objects.create(
+            user=user,
+            **validated_data,
+        )
+
+    def update(self, instance, validated_data):
+        validated_data.pop('username', None)
+        validated_data.pop('password', None)
+        return super().update(instance, validated_data)
+
 
 class InsuranceTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,6 +96,7 @@ class InsuranceTypeSerializer(serializers.ModelSerializer):
             'default_amount',
             'subject',
         ]
+
 
 class UserSerializer(serializers.ModelSerializer):
     is_admin = serializers.SerializerMethodField()
@@ -79,4 +119,5 @@ class UserSerializer(serializers.ModelSerializer):
     def get_insured_person_id(self, user):
         if hasattr(user, 'insured_person'):
             return user.insured_person.id
+
         return None

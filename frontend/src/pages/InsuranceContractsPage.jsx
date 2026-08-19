@@ -3,12 +3,12 @@ import { useState, useEffect } from "react";
 import InsuranceContractForm from "../components/InsuranceContractForm";
 import InsuranceContractList from "../components/InsuranceContractList";
 
-function InsuranceContractsPage( {authToken} ) {
+function InsuranceContractsPage({ authToken, t }) {
     const [insuranceContracts, setInsuranceContracts] = useState([]);
     const [editingContract, setEditingContract] = useState(null);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/insurance-contracts', {
+        fetch('http://127.0.0.1:8000/api/insurance-contracts/', {
             headers: {
                 Authorization: `Token ${authToken}`,
             },
@@ -30,7 +30,7 @@ function InsuranceContractsPage( {authToken} ) {
 
     const handleInsuranceContractUpdated = (updatedInsuranceContract) => {
         setInsuranceContracts(
-            insuranceContracts.map((contract) => 
+            insuranceContracts.map((contract) =>
             contract.id === updatedInsuranceContract.id
                 ? updatedInsuranceContract
                 : contract
@@ -40,9 +40,7 @@ function InsuranceContractsPage( {authToken} ) {
     };
 
     const handleInsuranceContractDelete = (insuranceContractId) => {
-        const confirmed = window.confirm(
-            'Are you sure you want to delete this insurance contract?'
-        );
+        const confirmed = window.confirm(t.deleteInsuranceContractConfirm);
         if (!confirmed) {
             return;
         }
@@ -75,18 +73,21 @@ function InsuranceContractsPage( {authToken} ) {
     return (
         <section>
             <InsuranceContractForm
+                key={editingContract?.id ?? 'new'}
                 authToken={authToken}
                 editingContract={editingContract}
                 onInsuranceContractCreated={handleInsuranceContractCreated}
                 onInsuranceContractUpdated={handleInsuranceContractUpdated}
+                t={t}
             />
 
-            <h2>InsuranceContracts</h2>
+            <h2>{t.insuranceContracts}</h2>
 
-            <InsuranceContractList 
+            <InsuranceContractList
                 insuranceContracts={insuranceContracts}
                 onInsuranceContractEdit={setEditingContract}
                 onInsuranceContractDelete={handleInsuranceContractDelete}
+                t={t}
             />
         </section>
     );

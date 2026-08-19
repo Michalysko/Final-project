@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import InsuranceContractList from "../components/InsuranceContractList";
 
-function MyContractsPage({ authToken }) {
+function MyContractsPage({ authToken, t }) {
     const [contracts, setContracts] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -22,18 +22,18 @@ function MyContractsPage({ authToken }) {
             })
             .catch((error) => {
                 console.error('Error loading contracts:', error);
-                setErrorMessage('No contracts are linked to this account.');
+                setErrorMessage(t.noContractsLinked);
             });
-    }, [authToken]);
+    }, [authToken, t]);
 
     return (
         <section>
-            <h2>My Contracts</h2>
-            
+            <h2>{t.myContracts}</h2>
+
             {errorMessage && (
                 <p className="error-message">{errorMessage}</p>
             )}
-            <InsuranceContractList insuranceContracts={contracts} />
+            <InsuranceContractList insuranceContracts={contracts} t={t} />
         </section>
     );
 }

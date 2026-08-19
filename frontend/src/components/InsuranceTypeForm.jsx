@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const emptyFormData = {
     name: '',
@@ -6,13 +6,14 @@ const emptyFormData = {
     subject: '',
 }
 
-function InsuranceTypeForm({ 
-    authToken, 
+function InsuranceTypeForm({
+    authToken,
     editingInsuranceType,
     onInsuranceTypeCreated,
     onInsuranceTypeUpdated,
+    t,
 }) {
-    const [formData, setFormData] = useState(emptyFormData)
+    const [formData, setFormData] = useState({ ...emptyFormData });
 
     useEffect(() => {
         if (editingInsuranceType) {
@@ -22,12 +23,12 @@ function InsuranceTypeForm({
                 subject: editingInsuranceType.subject || '',
             });
         } else {
-            setFormData({...emptyFormData});
+            setFormData({ ...emptyFormData });
         }
     }, [editingInsuranceType]);
-    
+
     const handleChange = (event) => {
-        const { name, value} = event.target;
+        const { name, value } = event.target;
 
         setFormData({
             ...formData,
@@ -47,7 +48,7 @@ function InsuranceTypeForm({
         fetch(url, {
             method: method,
             headers: {
-                'Content-type': 'application/json',
+                'Content-Type': 'application/json',
                 Authorization: `Token ${authToken}`
             },
             body: JSON.stringify({
@@ -62,7 +63,7 @@ function InsuranceTypeForm({
                 } else {
                     onInsuranceTypeCreated(savedInsuranceType);
                 }
-                setFormData({...emptyFormData});
+                setFormData({ ...emptyFormData });
             })
             .catch((error) => {
                 console.error('Error creating insurance type:', error);
@@ -71,12 +72,12 @@ function InsuranceTypeForm({
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
-            <h2>{editingInsuranceType ? 'Edit Insurance Type' : 'Add Insurance Type'}</h2>
+            <h2>{editingInsuranceType ? t.editInsuranceType : t.addInsuranceType}</h2>
 
             <div className="form-grid">
                 <label>
-                    Name
-                    <input 
+                    {t.name}
+                    <input
                         type="text"
                         name="name"
                         value={formData.name}
@@ -85,8 +86,8 @@ function InsuranceTypeForm({
                     />
                 </label>
                 <label>
-                    Default amount
-                    <input 
+                    {t.defaultAmount}
+                    <input
                         type="number"
                         name="default_amount"
                         value={formData.default_amount}
@@ -97,8 +98,8 @@ function InsuranceTypeForm({
                     />
                 </label>
                 <label>
-                    Subject
-                    <input 
+                    {t.subject}
+                    <input
                         type="text"
                         name="subject"
                         value={formData.subject}
@@ -109,7 +110,7 @@ function InsuranceTypeForm({
             </div>
 
             <button type="submit">
-                {editingInsuranceType ? 'Save changes' : 'Add insurance type'}
+                {editingInsuranceType ? t.saveChanges : t.addInsuranceTypeButton}
             </button>
         </form>
     );

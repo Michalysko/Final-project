@@ -1,43 +1,46 @@
-function InsuranceTypeList({ 
+import { translateInsuranceTypeName } from '../translations';
+
+function InsuranceTypeList({
     insuranceTypes,
-    onInsuranceTypeEdit, 
-    onInsuranceTypeDelete 
-}) { 
-        if (insuranceTypes.lenght === 0) {
-        return <p>No insurance types found.</p>;
+    onInsuranceTypeEdit,
+    onInsuranceTypeDelete,
+    t,
+}) {
+    if (insuranceTypes.length === 0) {
+        return <p>{t.noInsuranceTypes}</p>;
     }
     return (
         <table>
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Default amount</th>
-                    <th>Subject</th>
-                    <th>Actions</th>
+                    <th>{t.name}</th>
+                    <th>{t.defaultAmount}</th>
+                    <th>{t.subject}</th>
+                    <th>{t.actions}</th>
                 </tr>
             </thead>
             <tbody>
                 {insuranceTypes.map((insuranceType) => (
                     <tr key={insuranceType.id}>
-                        <td>{insuranceType.name}</td>
+                        <td>{translateInsuranceTypeName(insuranceType.name, t)}</td>
                         <td>{insuranceType.default_amount}</td>
                         <td>{insuranceType.subject}</td>
                         <td className="actions-cell">
-                            <button 
+                            <button
                                 type="button"
                                 className="secondary-button"
                                 onClick={() => onInsuranceTypeEdit(insuranceType)}
                             >
-                                Edit
+                                {t.edit}
                             </button>
-                            <button 
+                            <button
                                 type="button"
                                 className="danger-button"
-                                onClick={() => 
+                                onClick={() =>
                                     onInsuranceTypeDelete(insuranceType.id)
                                 }
                             >
-                                Delete
+                                {t.delete}
                             </button>
                         </td>
                     </tr>
@@ -48,3 +51,4 @@ function InsuranceTypeList({
 }
 
 export default InsuranceTypeList;
+

@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import InsuranceTypeForm from "../components/InsuranceTypeForm";
 import InsuranceTypeList from "../components/InsuranceTypeList";
 
-function InsuranceTypesPage({ authToken }) {
+function InsuranceTypesPage({ authToken, t }) {
     const [insuranceTypes, setInsuranceTypes] = useState([]);
     const [editingInsuranceType, setEditingInsuranceType] = useState(null)
 
@@ -15,8 +15,6 @@ function InsuranceTypesPage({ authToken }) {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log('Loaded insurance types:', data)
-
                 if (Array.isArray(data)) {
                     setInsuranceTypes(data);
                 } else if (Array.isArray(data.results)) {
@@ -36,7 +34,7 @@ function InsuranceTypesPage({ authToken }) {
 
     const handleInsuranceTypeUpdated = (updatedInsuranceType) => {
         setInsuranceTypes(
-            insuranceTypes.map((insuranceType) => 
+            insuranceTypes.map((insuranceType) =>
                 insuranceType.id === updatedInsuranceType.id
                     ? updatedInsuranceType
                     : insuranceType
@@ -46,13 +44,10 @@ function InsuranceTypesPage({ authToken }) {
     }
 
     const handleInsuranceTypeDeleted = (insuranceTypeId) => {
-        const confirmed = window.confirm(
-            'Are you sure you want to delete this insurance type?'
-        );
+        const confirmed = window.confirm(t.deleteInsuranceTypeConfirm);
         if (!confirmed) {
             return;
         }
-
 
         fetch(`http://127.0.0.1:8000/api/insurance-types/${insuranceTypeId}/`, {
             method: 'DELETE',
@@ -82,17 +77,20 @@ function InsuranceTypesPage({ authToken }) {
     return (
         <section>
             <InsuranceTypeForm
+                key={editingInsuranceType?.id ?? 'new'}
                 authToken={authToken}
                 editingInsuranceType={editingInsuranceType}
                 onInsuranceTypeCreated={handleInsuranceTypeCreated}
                 onInsuranceTypeUpdated={handleInsuranceTypeUpdated}
+                t={t}
             />
-            <h2>Insurance Types</h2>
+            <h2>{t.navInsuranceTypes}</h2>
 
             <InsuranceTypeList
                 insuranceTypes={insuranceTypes}
                 onInsuranceTypeEdit={setEditingInsuranceType}
                 onInsuranceTypeDelete={handleInsuranceTypeDeleted}
+                t={t}
             />
         </section>
     );

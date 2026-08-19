@@ -1,4 +1,6 @@
-function InsuredPersonDetail({ person }) {
+import { translateInsuranceTypeName } from '../translations';
+
+function InsuredPersonDetail({ person, t }) {
     if (!person) {
         return null
     }
@@ -6,50 +8,50 @@ function InsuredPersonDetail({ person }) {
 
     return (
         <section className="person-detail">
-            <h2>Insured person detail</h2>
+            <h2>{t.insuredPersonDetail}</h2>
 
             <dl>
                 <div>
-                    <dt>First name</dt>
+                    <dt>{t.firstName}</dt>
                     <dd>{person.first_name}</dd>
                 </div>
                 <div>
-                    <dt>Last name</dt>
+                    <dt>{t.lastName}</dt>
                     <dd>{person.last_name}</dd>
                 </div>
                 <div>
-                    <dt>Age</dt>
+                    <dt>{t.age}</dt>
                     <dd>{person.age}</dd>
                 </div>
                 <div>
-                    <dt>Address</dt>
+                    <dt>{t.address}</dt>
                     <dd>{person.address}</dd>
                 </div>
                 <div>
-                    <dt>Phone number</dt>
+                    <dt>{t.phoneNumber}</dt>
                     <dd>{person.phone_number}</dd>
                 </div>
             </dl>
 
-            <h3>Insurance Contracts</h3>
+            <h3>{t.insuranceContracts}</h3>
 
             {insuranceContracts.length === 0 ? (
-                <p>No insurance contract found for this person.</p>
+                <p>{t.noPersonContracts}</p>
             ) : (
                 <table>
                     <thead>
                         <tr>
-                            <th>Insurance type</th>
-                            <th>Subject</th>
-                            <th>Amount</th>
-                            <th>Contract date</th>
-                            <th>Valid until</th>
+                            <th>{t.insuranceType}</th>
+                            <th>{t.subject}</th>
+                            <th>{t.amount}</th>
+                            <th>{t.contractDate}</th>
+                            <th className="nowrap">{t.validUntil}</th>
                         </tr>
                     </thead>
                     <tbody>
                         {insuranceContracts.map((contract) => (
-                                <tr key={contract.id}>
-                                <td>{contract.insurance_type_name}</td>
+                            <tr key={contract.id}>
+                                <td>{translateInsuranceTypeName(contract.insurance_type_name, t)}</td>
                                 <td>{contract.insurance_type_subject}</td>
                                 <td>{contract.amount}</td>
                                 <td>{contract.contract_date}</td>
@@ -64,3 +66,5 @@ function InsuredPersonDetail({ person }) {
 }
 
 export default InsuredPersonDetail;
+
+
