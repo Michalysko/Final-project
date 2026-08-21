@@ -110,6 +110,16 @@ function InsuranceContractForm({
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        if (formData.contract_date && formData.valid_until) {
+            const contractDate = new Date(formData.contract_date);
+            const validUntil = new Date(formData.valid_until);
+
+            if (validUntil <= contractDate) {
+                alert('Valid until must be later than contract date.');
+                return;
+            }
+        }
+
         const url = editingContract
             ? `http://127.0.0.1:8000/api/insurance-contracts/${editingContract.id}/`
             : 'http://127.0.0.1:8000/api/insurance-contracts/';
@@ -187,6 +197,8 @@ function InsuranceContractForm({
                         name="subject"
                         value={formData.subject}
                         onChange={handleChange}
+                        minLength={2}
+                        maxLength={255}
                         required
                     />
                 </label>
@@ -198,6 +210,7 @@ function InsuranceContractForm({
                         value={formData.amount}
                         onChange={handleChange}
                         min="0"
+                        max="100000000"
                         step="0.01"
                         required
                     />

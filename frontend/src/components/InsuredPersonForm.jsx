@@ -115,6 +115,8 @@ function InsuredPersonForm({
                         name="first_name"
                         value={formData.first_name}
                         onChange={handleChange}
+                        minLength={2}
+                        maxLength={100}
                         required
                     />
                 </label>
@@ -125,6 +127,8 @@ function InsuredPersonForm({
                         name="last_name"
                         value={formData.last_name}
                         onChange={handleChange}
+                        minLength={2}
+                        maxLength={100}
                         required
                     />
                 </label>
@@ -135,7 +139,8 @@ function InsuredPersonForm({
                         name="age"
                         value={formData.age}
                         onChange={handleChange}
-                        min="0"
+                        min={0}
+                        max={120}
                         required
                     />
                 </label>
@@ -146,16 +151,20 @@ function InsuredPersonForm({
                         name="address"
                         value={formData.address}
                         onChange={handleChange}
+                        minLength={5}
+                        maxLength={255}
                         required
                     />
                 </label>
                 <label>
                     {t.phoneNumber}
                     <input
-                        type="text"
+                        type="tel"
                         name="phone_number"
                         value={formData.phone_number}
                         onChange={handleChange}
+                        pattern="^[0-9+ ]{9,20}$"
+                        title="Use 9 to 20 characters: numbers, plus sign and spaces only."
                         required
                     />
                 </label>
@@ -173,6 +182,8 @@ function InsuredPersonForm({
                                 name="username"
                                 value={formData.username}
                                 onChange={handleChange}
+                                minLength={3}
+                                maxLength={150}
                                 required
                             />
                         </label>
@@ -183,6 +194,7 @@ function InsuredPersonForm({
                                 name="password"
                                 value={formData.password}
                                 onChange={handleChange}
+                                minLength={8}
                                 required
                             />
                         </label>

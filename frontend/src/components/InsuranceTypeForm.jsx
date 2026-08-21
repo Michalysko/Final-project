@@ -83,6 +83,8 @@ function InsuranceTypeForm({
                         name="name_en"
                         value={formData.name_en}
                         onChange={handleChange}
+                        minLength={2}
+                        maxLength={100}
                         required
                     />
                 </label>
@@ -93,6 +95,8 @@ function InsuranceTypeForm({
                         name="name_cs"
                         value={formData.name_cs}
                         onChange={handleChange}
+                        minLength={2}
+                        maxLength={100}
                         required
                     />
                 </label>
@@ -104,6 +108,7 @@ function InsuranceTypeForm({
                         value={formData.default_amount}
                         onChange={handleChange}
                         min="0"
+                        max="100000000"
                         step="0.01"
                         required
                     />
