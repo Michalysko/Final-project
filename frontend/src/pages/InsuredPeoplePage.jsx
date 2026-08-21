@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import InsuredPersonForm from '../components/InsuredPersonForm';
 import InsuredPersonList from '../components/InsuredPersonList';
@@ -11,21 +11,45 @@ function InsuredPeoplePage({ authToken, t }) {
         address: '',
         phone_number: '',
     });
+    const [nextPage, setNextPage] = useState(null);
+    const [previousPage, setPreviousPage] = useState(null);
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/insured-people/', {
+    const loadInsuredPeople = useCallback((url = null) => {
+        const searchParams = new URLSearchParams();
+
+        if (searchData.name) {
+            searchParams.append('name', searchData.name);
+        }
+
+        if (searchData.address) {
+            searchParams.append('address', searchData.address);
+        }
+
+        if (searchData.phone_number) {
+            searchParams.append('phone_number', searchData.phone_number);
+        }
+
+        const apiUrl = url || `http://127.0.0.1:8000/api/insured-people/?${searchParams.toString()}`;
+
+        fetch(apiUrl, {
             headers: {
                 Authorization: `Token ${authToken}`,
             },
         })
             .then((response) => response.json())
             .then((data) => {
-                setInsuredPeople(data);
+                setInsuredPeople(data.results || data || []);
+                setNextPage(data.next);
+                setPreviousPage(data.previous);
             })
             .catch((error) => {
                 console.error('Error loading insured people:', error);
             });
-    }, [authToken]);
+    }, [authToken, searchData]);
+
+    useEffect(() => {
+        loadInsuredPeople();
+    }, [loadInsuredPeople]);
 
     const handlePersonCreated = (createdPerson) => {
         setInsuredPeople([...insuredPeople, createdPerson])
@@ -80,20 +104,6 @@ function InsuredPeoplePage({ authToken, t }) {
             });
     };
 
-    const filteredPeople = insuredPeople.filter((person) => {
-        const fullName = `${person.first_name} ${person.last_name}`.toLowerCase();
-
-        const matchesName = fullName.includes(searchData.name.toLowerCase());
-        const matchesAddress = person.address
-            .toLowerCase()
-            .includes(searchData.address.toLowerCase());
-        const matchesPhone = person.phone_number
-            .toLowerCase()
-            .includes(searchData.phone_number.toLowerCase());
-
-        return matchesName && matchesAddress && matchesPhone;
-    });
-
     return (
         <section>
             <InsuredPersonForm
@@ -104,7 +114,13 @@ function InsuredPeoplePage({ authToken, t }) {
                 onPersonUpdated={handlePersonUpdated}
                 t={t}
             />
-            <form className="search-form">
+            <form 
+                className="search-form"
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    loadInsuredPeople();
+                }}
+            >
                 <h2>{t.searchInsuredPeople}</h2>
 
                 <div className="form-grid">
@@ -139,17 +155,37 @@ function InsuredPeoplePage({ authToken, t }) {
                         />
                     </label>
                 </div>
+                <button type="submit">
+                    {t.searchInsuredPeople}
+                </button>
             </form>
             <h2>{t.navInsuredPeople}</h2>
             <InsuredPersonList
-                insuredPeople={filteredPeople}
+                insuredPeople={insuredPeople}
                 onPersonEdit={handlePersonEdit}
                 onPersonDelete={handlePersonDelete}
                 t={t}
             />
+            <div className="pagination-controls">
+                <button 
+                    type="button"
+                    onClick={() => loadInsuredPeople(previousPage)}
+                    disabled={!previousPage}
+                >
+                    Previous
+                </button>
+                <button
+                    type="button"
+                    onClick={() => loadInsuredPeople(nextPage)}
+                    disabled={!nextPage}
+                >
+                    Next
+                </button>
+            </div>
         </section>
     );
 }
 
 export default InsuredPeoplePage;
+
 

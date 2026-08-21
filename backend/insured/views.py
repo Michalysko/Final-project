@@ -11,11 +11,32 @@ from .serializers import (
     InsuranceContractSerializer,
     UserSerializer,
 )
+from django.db.models import Q
 
 class InsuredPersonViewSet(viewsets.ModelViewSet):
-    queryset = InsuredPerson.objects.all()
     serializer_class = InsuredPersonSerializer
     permission_classes = [IsAdminUserRole]
+
+    def get_queryset(self):
+        queryset = InsuredPerson.objects.all().order_by('last_name', 'first_name')
+
+        name = self.request.query_params.get('name', '')
+        address = self.request.query_params.get('address', '')
+        phone_number = self.request.query_params.get('phone_number', '')
+
+        if name:
+            queryset = queryset.filter(
+                Q(first_name_icontains=name)
+                | Q(last_name_icontains=name)
+            )
+
+        if address:
+            queryset = queryset.filter(address__icontains=address)
+
+        if phone_number:
+            queryset = queryset.filter(phone_number__icontains=phone_number)
+
+        return queryset
 
 class InsuranceTypeViewSet(viewsets.ModelViewSet):
     queryset = InsuranceType.objects.all()
