@@ -1,10 +1,21 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const emptyFormData = {
     name_en: '',
     name_cs: '',
     default_amount: '',
 }
+
+const getInitialFormData = (editingInsuranceType) => {
+    if (!editingInsuranceType) {
+        return { ...emptyFormData };
+    }
+    return {
+        name_en: editingInsuranceType.name_en || '',
+        name_cs: editingInsuranceType.name_cs || '',
+        default_amount: editingInsuranceType.default_amount || '',
+    };
+};
 
 function InsuranceTypeForm({
     authToken,
@@ -13,20 +24,10 @@ function InsuranceTypeForm({
     onInsuranceTypeUpdated,
     t,
 }) {
-    const [formData, setFormData] = useState({ ...emptyFormData });
-
-    useEffect(() => {
-        if (editingInsuranceType) {
-            setFormData({
-                name_en: editingInsuranceType.name_en || '',
-                name_cs: editingInsuranceType.name_cs || '',
-                default_amount: editingInsuranceType.default_amount || '',
-            });
-        } else {
-            setFormData({ ...emptyFormData });
-        }
-    }, [editingInsuranceType]);
-
+    const [formData, setFormData] = useState(() =>
+        getInitialFormData(editingInsuranceType)
+    );
+    
     const handleChange = (event) => {
         const { name, value } = event.target;
 

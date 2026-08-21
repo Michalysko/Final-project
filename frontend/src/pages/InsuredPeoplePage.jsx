@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import InsuredPersonForm from '../components/InsuredPersonForm';
 import InsuredPersonList from '../components/InsuredPersonList';
 
-function InsuredPeoplePage({ authToken, t, language }) {
+function InsuredPeoplePage({ authToken, t }) {
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [editingPerson, setEditingPerson] = useState(null);
     const [searchData, setSearchData] = useState({

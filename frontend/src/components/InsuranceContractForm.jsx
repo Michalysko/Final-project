@@ -10,6 +10,21 @@ const emptyFormData = {
     valid_until: '',
 };
 
+const getInitialFormData = (editingContract) => {
+    if (!editingContract) {
+        return { ...emptyFormData };
+    }
+    return {
+        insured_person: editingContract.insured_person || '',
+        insurance_type: editingContract.insurance_type || '',
+        subject: editingContract.subject || '',
+        amount: editingContract.amount || '',
+        contract_date: editingContract.contract_date || '',
+        valid_until: editingContract.valid_until || '',
+    };
+};
+
+
 const getApiList = (data) => {
     if (Array.isArray(data)) {
         return data;
@@ -30,24 +45,11 @@ function InsuranceContractForm({
     t,
     language,
 }) {
-    const [formData, setFormData] = useState({ ...emptyFormData });
+    const [formData, setFormData] = useState(() =>
+        getInitialFormData(editingContract)
+    );
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [insuranceTypes, setInsuranceTypes] = useState([]);
-
-    useEffect(() => {
-        if (editingContract) {
-            setFormData({
-                insured_person: editingContract.insured_person || '',
-                insurance_type: editingContract.insurance_type || '',
-                subject: editingContract.subject || '',
-                amount: editingContract.amount || '',
-                contract_date: editingContract.contract_date || '',
-                valid_until: editingContract.valid_until || '',
-            });
-        } else {
-            setFormData({ ...emptyFormData });
-        }
-    }, [editingContract]);
 
     useEffect(() => {
         fetch('http://127.0.0.1:8000/api/insured-people/', {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const emptyFormData = {
     first_name: '',
@@ -10,6 +10,21 @@ const emptyFormData = {
     password: '',
 }
 
+const getInitialFormData = (editingPerson) => {
+    if (!editingPerson) {
+        return { ...emptyFormData };
+    }
+    return {
+        first_name: editingPerson.first_name || '',
+        last_name: editingPerson.last_name || '',
+        age: editingPerson.age || '',
+        address: editingPerson.address || '',
+        phone_number: editingPerson.phone_number || '',
+        username: '',
+        password: '',
+    };
+};
+
 function InsuredPersonForm({
     authToken,
     editingPerson,
@@ -17,26 +32,11 @@ function InsuredPersonForm({
     onPersonUpdated,
     t,
 }) {
-    const [formData, setFormData] = useState({ ...emptyFormData });
+
+    const [formData, setFormData] = useState(() =>
+        getInitialFormData(editingPerson)
+    );
     const [errorMessage, setErrorMessage] = useState('');
-
-    useEffect(() => {
-        if (editingPerson) {
-            setFormData({
-                first_name: editingPerson.first_name || '',
-                last_name: editingPerson.last_name || '',
-                age: editingPerson.age || '',
-                address: editingPerson.address || '',
-                phone_number: editingPerson.phone_number || '',
-                username: '',
-                password: '',
-            });
-        } else {
-            setFormData({ ...emptyFormData });
-        }
-
-        setErrorMessage('');
-    }, [editingPerson]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;

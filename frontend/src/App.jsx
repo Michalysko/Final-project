@@ -39,7 +39,6 @@ function App() {
 
     useEffect(() => {
         if (!authToken) {
-            setCurrentUser(null);
             return;
         }
 
@@ -154,7 +153,7 @@ function App() {
                         path="/insured-people"
                         element={
                             authToken && currentUser?.is_admin ? (
-                                <InsuredPeoplePage authToken={authToken} t={t} language={language} />
+                                <InsuredPeoplePage authToken={authToken} t={t} />
                             ) : authToken ? (
                                 <Navigate to="/my-profile" replace />
                             ) : (
