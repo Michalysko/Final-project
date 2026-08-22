@@ -37,7 +37,7 @@ function InsuranceContractList({
                         <td>{contract.subject}</td>
                         <td>{contract.amount}</td>
                         <td>{contract.contract_date}</td>
-                        <td>{contract.valid_until}</td>
+                        <td className='nowrap'>{contract.valid_until}</td>
                         {hasActions && (
                             <td className="actions-cell">
                                 {canEdit && (

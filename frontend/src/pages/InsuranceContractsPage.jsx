@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 import InsuranceContractForm from "../components/InsuranceContractForm";
 import InsuranceContractList from "../components/InsuranceContractList";
@@ -6,9 +6,13 @@ import InsuranceContractList from "../components/InsuranceContractList";
 function InsuranceContractsPage({ authToken, t, language }) {
     const [insuranceContracts, setInsuranceContracts] = useState([]);
     const [editingContract, setEditingContract] = useState(null);
+    const [nextPage, setNextPage] = useState(null);
+    const [previousPage, setPreviousPage] = useState(null);
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/insurance-contracts/', {
+    const loadInsuranceContracts = useCallback((url = null) => {
+        const apiUrl = url || 'http://127.0.0.1:8000/api/insurance-contracts/';
+
+        fetch(apiUrl, {
             headers: {
                 Authorization: `Token ${authToken}`,
             },
@@ -17,16 +21,26 @@ function InsuranceContractsPage({ authToken, t, language }) {
             .then((data) => {
                 if (Array.isArray(data)) {
                     setInsuranceContracts(data);
+                    setNextPage(null);
+                    setPreviousPage(null);
                 } else if (Array.isArray(data.results)) {
                     setInsuranceContracts(data.results);
+                    setNextPage(data.next);
+                    setPreviousPage(data.previous);
                 } else {
                     setInsuranceContracts([]);
+                    setNextPage(null);
+                    setPreviousPage(null);
                 }
             })
             .catch((error) => {
                 console.error('Error loading insurance contracts:', error);
             });
     }, [authToken]);
+
+    useEffect(() => {
+        loadInsuranceContracts();
+    }, [loadInsuranceContracts]);
 
     const handleInsuranceContractCreated = (createdInsuranceContract) => {
         setInsuranceContracts([
@@ -97,6 +111,22 @@ function InsuranceContractsPage({ authToken, t, language }) {
                 t={t}
                 language={language}
             />
+            <div className="pagination-controls">
+                <button
+                    type="button"
+                    onClick={() => loadInsuranceContracts(previousPage)}
+                    disabled={!previousPage}
+                >
+                    {t.previous}
+                </button>
+                <button 
+                    type="button"
+                    onClick={() => loadInsuranceContracts(nextPage)}
+                    disabled={!nextPage}
+                >
+                    {t.next}
+                </button>
+            </div>
         </section>
     );
 }
