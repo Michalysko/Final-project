@@ -25,10 +25,11 @@ class InsuredPersonViewSet(viewsets.ModelViewSet):
         phone_number = self.request.query_params.get('phone_number', '')
 
         if name:
-            queryset = queryset.filter(
-                Q(first_name_icontains=name)
-                | Q(last_name_icontains=name)
-            )
+            for name_part in name.split():
+                queryset = queryset.filter(
+                    Q(first_name__icontains=name_part)
+                    | Q(last_name__icontains=name_part)
+                )
 
         if address:
             queryset = queryset.filter(address__icontains=address)
@@ -79,3 +80,5 @@ class MyContractsView(APIView):
         contracts = request.user.insured_person.insurance_contracts.all()
         serializer = InsuranceContractSerializer(contracts, many=True)
         return Response(serializer.data)
+
+

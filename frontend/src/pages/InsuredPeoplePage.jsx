@@ -3,30 +3,33 @@ import { useState, useEffect, useCallback } from "react";
 import InsuredPersonForm from '../components/InsuredPersonForm';
 import InsuredPersonList from '../components/InsuredPersonList';
 
+const emptySearchData = {
+    name: '',
+    address: '',
+    phone_number: '',
+};
+
 function InsuredPeoplePage({ authToken, t }) {
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [editingPerson, setEditingPerson] = useState(null);
-    const [searchData, setSearchData] = useState({
-        name: '',
-        address: '',
-        phone_number: '',
-    });
+    const [searchData, setSearchData] = useState({ ...emptySearchData });
+    const [appliedSearchData, setAppliedSearchData] = useState({ ...emptySearchData });
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
 
     const loadInsuredPeople = useCallback((url = null) => {
         const searchParams = new URLSearchParams();
 
-        if (searchData.name) {
-            searchParams.append('name', searchData.name);
+        if (appliedSearchData.name) {
+            searchParams.append('name', appliedSearchData.name);
         }
 
-        if (searchData.address) {
-            searchParams.append('address', searchData.address);
+        if (appliedSearchData.address) {
+            searchParams.append('address', appliedSearchData.address);
         }
 
-        if (searchData.phone_number) {
-            searchParams.append('phone_number', searchData.phone_number);
+        if (appliedSearchData.phone_number) {
+            searchParams.append('phone_number', appliedSearchData.phone_number);
         }
 
         const apiUrl = url || `http://127.0.0.1:8000/api/insured-people/?${searchParams.toString()}`;
@@ -39,13 +42,13 @@ function InsuredPeoplePage({ authToken, t }) {
             .then((response) => response.json())
             .then((data) => {
                 setInsuredPeople(data.results || data || []);
-                setNextPage(data.next);
-                setPreviousPage(data.previous);
+                setNextPage(data.next || null);
+                setPreviousPage(data.previous || null);
             })
             .catch((error) => {
                 console.error('Error loading insured people:', error);
             });
-    }, [authToken, searchData]);
+    }, [authToken, appliedSearchData]);
 
     useEffect(() => {
         loadInsuredPeople();
@@ -76,6 +79,11 @@ function InsuredPeoplePage({ authToken, t }) {
             [name]: value,
         });
     }
+
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        setAppliedSearchData({ ...searchData });
+    };
 
     const handlePersonDelete = (personId) => {
         const confirmed = window.confirm(t.deletePersonConfirm);
@@ -116,10 +124,7 @@ function InsuredPeoplePage({ authToken, t }) {
             />
             <form 
                 className="search-form"
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    loadInsuredPeople();
-                }}
+                onSubmit={handleSearchSubmit}
             >
                 <h2>{t.searchInsuredPeople}</h2>
 
@@ -172,14 +177,14 @@ function InsuredPeoplePage({ authToken, t }) {
                     onClick={() => loadInsuredPeople(previousPage)}
                     disabled={!previousPage}
                 >
-                    Previous
+                    {t.previous}
                 </button>
                 <button
                     type="button"
                     onClick={() => loadInsuredPeople(nextPage)}
                     disabled={!nextPage}
                 >
-                    Next
+                    {t.next}
                 </button>
             </div>
         </section>
@@ -187,5 +192,4 @@ function InsuredPeoplePage({ authToken, t }) {
 }
 
 export default InsuredPeoplePage;
-
 

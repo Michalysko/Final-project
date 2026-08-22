@@ -15,7 +15,13 @@ function InsuranceContractsPage({ authToken, t, language }) {
         })
             .then((response) => response.json())
             .then((data) => {
-                setInsuranceContracts(data);
+                if (Array.isArray(data)) {
+                    setInsuranceContracts(data);
+                } else if (Array.isArray(data.results)) {
+                    setInsuranceContracts(data.results);
+                } else {
+                    setInsuranceContracts([]);
+                }
             })
             .catch((error) => {
                 console.error('Error loading insurance contracts:', error);
@@ -96,6 +102,7 @@ function InsuranceContractsPage({ authToken, t, language }) {
 }
 
 export default InsuranceContractsPage;
+
 
 
 

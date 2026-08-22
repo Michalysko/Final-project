@@ -7,11 +7,12 @@ function InsuranceContractList({
     t,
     language,
 }) {
+    const contracts = Array.isArray(insuranceContracts) ? insuranceContracts : [];
     const canEdit = Boolean(onInsuranceContractEdit);
     const canDelete = Boolean(onInsuranceContractDelete);
     const hasActions = canEdit || canDelete;
 
-    if (insuranceContracts.length === 0) {
+    if (contracts.length === 0) {
         return <p>{t.noInsuranceContracts}</p>;
     }
 
@@ -29,7 +30,7 @@ function InsuranceContractList({
                 </tr>
             </thead>
             <tbody>
-                {insuranceContracts.map((contract) => (
+                {contracts.map((contract) => (
                     <tr key={contract.id}>
                         <td>{contract.insured_person_name}</td>
                         <td>{getContractInsuranceTypeName(contract, language)}</td>
@@ -69,3 +70,4 @@ function InsuranceContractList({
 }
 
 export default InsuranceContractList;
+

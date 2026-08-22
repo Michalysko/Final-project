@@ -67,6 +67,8 @@ export const translations = {
         noProfileLinked: 'No profile is linked to this account.',
         myContracts: 'My Contracts',
         noContractsLinked: 'No contracts are linked to this account.',
+        previous: 'Previous',
+        next: 'Next',
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -136,6 +138,8 @@ export const translations = {
         noProfileLinked: 'K tomuto účtu není přiřazený žádný profil.',
         myContracts: 'Moje smlouvy',
         noContractsLinked: 'K tomuto účtu nejsou přiřazené žádné smlouvy.',
+        previous: 'Předchozí',
+        next: 'Další',
     },
 };
 
@@ -158,3 +162,4 @@ export function getContractInsuranceTypeName(contract, language) {
         ? contract.insurance_type_name_cs || contract.insurance_type_name_en
         : contract.insurance_type_name_en || contract.insurance_type_name_cs;
 }
+
