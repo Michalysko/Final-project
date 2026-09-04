@@ -17,6 +17,22 @@ const getInitialFormData = (editingInsuranceType) => {
     };
 };
 
+const getApiErrorMessage = (errorData, fallbackMessage) => {
+    if (!errorData || typeof errorData !== 'object') {
+        return fallbackMessage;
+    }
+
+    const messages = Object.entries(errorData).flatMap(([field, errors]) => {
+        if (Array.isArray(errors)) {
+            return errors.map(() => `${field}: ${errors}`);
+        }
+
+        return [`${field}: ${errors}`];
+    });
+
+    return messages.join(' ');
+};
+
 function InsuranceTypeForm({
     authToken,
     editingInsuranceType,
@@ -27,6 +43,8 @@ function InsuranceTypeForm({
     const [formData, setFormData] = useState(() =>
         getInitialFormData(editingInsuranceType)
     );
+
+    const [errorMessage, setErrorMessage] = useState('');
     
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -40,6 +58,8 @@ function InsuranceTypeForm({
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        setErrorMessage('');
+        
         const url = editingInsuranceType
             ? `http://127.0.0.1:8000/api/insurance-types/${editingInsuranceType.id}/`
             : 'http://127.0.0.1:8000/api/insurance-types/';
@@ -57,7 +77,17 @@ function InsuranceTypeForm({
                 default_amount: Number(formData.default_amount),
             }),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    return response.json().then((errorData) => {
+                        throw new Error(
+                            getApiErrorMessage(errorData, 'Unable to save insurance type.')
+                        );
+                    });
+                }
+                return response.json();
+            })
+
             .then((savedInsuranceType) => {
                 if (editingInsuranceType) {
                     onInsuranceTypeUpdated(savedInsuranceType);
@@ -68,12 +98,16 @@ function InsuranceTypeForm({
             })
             .catch((error) => {
                 console.error('Error creating insurance type:', error);
+                setErrorMessage(error.message || 'Unable to save insurance type.');
             });
     };
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
             <h2>{editingInsuranceType ? t.editInsuranceType : t.addInsuranceType}</h2>
+            {errorMessage && (
+                <p className="error-message">{errorMessage}</p>
+            )}
 
             <div className="form-grid">
                 <label>

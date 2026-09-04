@@ -24,6 +24,21 @@ const getInitialFormData = (editingContract) => {
     };
 };
 
+const getApiErrorMessage = (errorData, fallbackMessage) => {
+    if (!errorData || typeof errorData !== 'object') {
+        return fallbackMessage;
+    }
+
+    const messages = Object.entries(errorData).flatMap(([field, errors]) => {
+        if (Array.isArray(errors)) {
+            return errors.map((error) => `${field}: ${error}`);
+        }
+        return [`${field}: ${errors}`];
+    });
+
+    return messages.join(' ');
+}
+
 
 const getApiList = (data) => {
     if (Array.isArray(data)) {
@@ -48,6 +63,7 @@ function InsuranceContractForm({
     const [formData, setFormData] = useState(() =>
         getInitialFormData(editingContract)
     );
+    const [errorMessage, setErrorMessage] = useState('');
     const [insuredPeople, setInsuredPeople] = useState([]);
     const [insuranceTypes, setInsuranceTypes] = useState([]);
 
@@ -110,6 +126,8 @@ function InsuranceContractForm({
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        setErrorMessage('');
+
         if (formData.contract_date && formData.valid_until) {
             const contractDate = new Date(formData.contract_date);
             const validUntil = new Date(formData.valid_until);
@@ -139,7 +157,17 @@ function InsuranceContractForm({
                 amount: Number(formData.amount),
             }),
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (!response.ok) {
+                return response.json().then((errorData) => {
+                    throw new Error(
+                        getApiErrorMessage(errorData, 'Unable to save insurance contract.')
+                    );
+                });
+            }
+            return response.json()
+        })
+
         .then((savedInsuranceContract) => {
             if (editingContract) {
                 onInsuranceContractUpdated(savedInsuranceContract);
@@ -150,12 +178,16 @@ function InsuranceContractForm({
         })
         .catch((error) => {
             console.error('Error creating insurance contract:', error);
+            setErrorMessage(error.message || 'Unable to save insurance contract.')
         });
     };
 
     return (
         <form className="insured-form" onSubmit={handleSubmit}>
             <h2>{editingContract ? t.editInsuranceContract : t.addInsuranceContract}</h2>
+            {errorMessage && (
+                <p className='error-message'>{errorMessage}</p>
+            )}
 
             <div className="form-grid">
                 <label>

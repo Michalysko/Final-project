@@ -10,6 +10,21 @@ const emptyFormData = {
     password: '',
 }
 
+const getApiErrorMessage = (errorData, fallbackMessage) => {
+    if (!errorData || typeof errorData !== 'object') {
+        return fallbackMessage;
+    }
+
+    const messages = Object.entries(errorData).flatMap(([field, errors]) => {
+        if (Array.isArray(errors)) {
+            return errors.map((error) => `${field}: ${error}`);
+        }
+        return [`${field}: ${errors}`];
+    });
+
+    return messages.join(' ');
+}
+
 const getInitialFormData = (editingPerson) => {
     if (!editingPerson) {
         return { ...emptyFormData };
@@ -80,11 +95,15 @@ function InsuredPersonForm({
         })
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error('Save request failed');
+                    return response.json().then((errorData) => {
+                        throw new Error(
+                            getApiErrorMessage(errorData, t.unableToSavePerson)
+                        );
+                    });
                 }
-
                 return response.json();
             })
+
             .then((savedPerson) => {
                 if (editingPerson) {
                     onPersonUpdated(savedPerson);
@@ -95,7 +114,7 @@ function InsuredPersonForm({
             })
             .catch((error) => {
                 console.error('Error saving insured person:', error);
-                setErrorMessage(t.unableToSavePerson);
+                setErrorMessage(error.message || t.unableToSavePerson);
             });
     };
 
