@@ -1,4 +1,5 @@
 import unicodedata
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -73,10 +74,36 @@ class InsuranceTypeViewSet(viewsets.ModelViewSet):
 
 
 class InsuranceContractViewSet(viewsets.ModelViewSet):
-    queryset = InsuranceContract.objects.all()
     serializer_class = InsuranceContractSerializer
     permission_classes = [IsAdminUserRole]
 
+    def get_queryset(self):
+        queryset = InsuranceContract.objects.select_related(
+            'insured_person',
+            'insurance_type',
+        ).order_by('-contract_date', '-id')
+
+        insured_person = self.request.query_params.get('insured_person', '')
+        insurance_type = self.request.query_params.get('insurance_type', '')
+        subject = self.request.query_params.get('subject', '')
+
+        if insured_person:
+            for name_part in insured_person.split():
+                queryset = queryset.filter(
+                    Q(insured_person__first_name__icontains=name_part)
+                    | Q(insured_person__last_name__icontains=name_part)
+                )
+
+        if insurance_type:
+            queryset = queryset.filter(
+                Q(insurance_type__name_en__icontains=insurance_type)
+                | Q(insurance_type__name_cs__icontains=insurance_type)
+            )
+
+        if subject:
+            queryset = queryset.filter(subject__icontains=subject)
+
+        return queryset
 
 class CurrentUserView(APIView):
     permission_classes = [IsAuthenticated]

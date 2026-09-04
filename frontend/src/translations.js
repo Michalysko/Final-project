@@ -75,6 +75,10 @@ export const translations = {
         loading: 'Loading...',
         showingInsuredPeople: (visibleCount, totalCount) =>
             `Showing ${visibleCount} of ${totalCount} insured people`,
+        searchInsuranceContracts: 'Search Insurance Contracts',
+        insuredPersonPlaceholder: 'First name or last name',
+        insuranceTypePlaceholder: 'Insurance type',
+        subjectPlaceholder: 'Subject',
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -151,7 +155,11 @@ export const translations = {
         next: 'Další',
         loading: 'Načítání...',
         showingInsuredPeople: (visibleCount, totalCount) =>
-            `Zobrazeno ${visibleCount} z ${totalCount} pojištěnců`,      
+            `Zobrazeno ${visibleCount} z ${totalCount} pojištěnců`,
+        searchInsuranceContracts: 'Vyhledat pojistné smlouvy',
+        insuredPersonPlaceholder: 'Jméno nebo příjmení',
+        insuranceTypePlaceholder: 'Typ pojištění',
+        subjectPlaceholder: 'Předmět pojištění',      
         },
 };
 
