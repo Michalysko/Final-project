@@ -5,6 +5,7 @@ import InsuranceTypeList from "../components/InsuranceTypeList";
 
 function InsuranceTypesPage({ authToken, t, language }) {
     const [insuranceTypes, setInsuranceTypes] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [editingInsuranceType, setEditingInsuranceType] = useState(null)
 
     useEffect(() => {
@@ -25,6 +26,9 @@ function InsuranceTypesPage({ authToken, t, language }) {
             })
             .catch((error) => {
                 console.error('Error loading insurance types:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }, [authToken]);
 
@@ -87,13 +91,17 @@ function InsuranceTypesPage({ authToken, t, language }) {
             />
             <h2>{t.navInsuranceTypes}</h2>
 
-            <InsuranceTypeList
-                insuranceTypes={insuranceTypes}
-                onInsuranceTypeEdit={setEditingInsuranceType}
-                onInsuranceTypeDelete={handleInsuranceTypeDeleted}
-                t={t}
-                language={language}
-            />
+            {isLoading ? (
+                <p className="loading-message">{t.loading}</p>
+            ) : (
+                <InsuranceTypeList
+                    insuranceTypes={insuranceTypes}
+                    onInsuranceTypeEdit={setEditingInsuranceType}
+                    onInsuranceTypeDelete={handleInsuranceTypeDeleted}
+                    t={t}
+                    language={language}
+                />
+            )}
         </section>
     );
 };
