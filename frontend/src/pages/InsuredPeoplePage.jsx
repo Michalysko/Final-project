@@ -17,6 +17,7 @@ function InsuredPeoplePage({ authToken, t }) {
     const [appliedSearchData, setAppliedSearchData] = useState({ ...emptySearchData });
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
 
     const loadInsuredPeople = useCallback((url = null) => {
         const searchParams = new URLSearchParams();
@@ -45,6 +46,7 @@ function InsuredPeoplePage({ authToken, t }) {
                 setInsuredPeople(data.results || data || []);
                 setNextPage(data.next || null);
                 setPreviousPage(data.previous || null);
+                setTotalCount(data.count || data.results?.length || data.length || 0);
             })
             .catch((error) => {
                 console.error('Error loading insured people:', error);
@@ -189,6 +191,11 @@ function InsuredPeoplePage({ authToken, t }) {
                 </button>
             </form>
             <h2>{t.navInsuredPeople}</h2>
+            {!isLoading && (
+                <p className="result-count">
+                    {t.showingInsuredPeople(insuredPeople.length, totalCount)}
+                </p>
+            )}
             {isLoading ? (
                 <p className="loading-message">{t.loading}</p>
             ) : (

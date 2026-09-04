@@ -71,6 +71,8 @@ export const translations = {
         previous: 'Previous',
         next: 'Next',
         loading: 'Loading...',
+        showingInsuredPeople: (visibleCount, totalCount) =>
+            `Showing ${visibleCount} of ${totalCount} insured people`,
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -144,6 +146,8 @@ export const translations = {
         previous: 'Předchozí',
         next: 'Další',
         loading: 'Načítání...',
+        showingInsuredPeople: (visibleCount, totalCount) =>
+            `Zobrazeno ${visibleCount} z ${totalCount} pojištěnců`,
     },
 };
 
