@@ -32,6 +32,7 @@ export const translations = {
         unableToSavePerson: 'Unable to save insured person. Check username and form values.',
         noInsuredPeople: 'No insured people found.',
         searchInsuredPeople: 'Search Insured People',
+        clearSearch: 'Clear search',
         name: 'Name',
         nameEn: 'English name',
         nameCs: 'Czech name',
@@ -69,7 +70,7 @@ export const translations = {
         noContractsLinked: 'No contracts are linked to this account.',
         previous: 'Previous',
         next: 'Next',
-        loading: 'Loading...'
+        loading: 'Loading...',
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -104,6 +105,7 @@ export const translations = {
         unableToSavePerson: 'Pojištěnce se nepodařilo uložit. Zkontroluj uživatelské jméno a hodnoty ve formuláři.',
         noInsuredPeople: 'Nebyli nalezeni žádní pojištěnci.',
         searchInsuredPeople: 'Vyhledat pojištěnce',
+        clearSearch: 'Vymazat hledání',
         name: 'Jméno',
         nameEn: 'Anglický název',
         nameCs: 'Český název',
@@ -141,7 +143,7 @@ export const translations = {
         noContractsLinked: 'K tomuto účtu nejsou přiřazené žádné smlouvy.',
         previous: 'Předchozí',
         next: 'Další',
-        loading: 'Načítání...'
+        loading: 'Načítání...',
     },
 };
 

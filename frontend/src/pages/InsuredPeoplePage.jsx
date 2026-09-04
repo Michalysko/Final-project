@@ -91,6 +91,12 @@ function InsuredPeoplePage({ authToken, t }) {
         setAppliedSearchData({ ...searchData });
     };
 
+    const handleClearSearch = () => {
+        setIsLoading(true);
+        setSearchData({ ...emptySearchData });
+        setAppliedSearchData({ ...emptySearchData });
+    };
+
     const handlePersonDelete = (personId) => {
         const confirmed = window.confirm(t.deletePersonConfirm);
         if (!confirmed) {
@@ -173,6 +179,13 @@ function InsuredPeoplePage({ authToken, t }) {
                 </div>
                 <button type="submit">
                     {t.searchInsuredPeople}
+                </button>
+                <button 
+                    type="button"
+                    className="secondary-button"
+                    onClick={handleClearSearch}
+                >
+                    {t.clearSearch}
                 </button>
             </form>
             <h2>{t.navInsuredPeople}</h2>
