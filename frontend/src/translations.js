@@ -42,6 +42,8 @@ export const translations = {
         deletePersonConfirm: 'Are you sure you want to delete this insured person?',
         insuredPersonDetail: 'Insured person detail',
         insuranceContracts: 'Insurance Contracts',
+        showingInsuranceContracts: (visibleCount, totalCount) =>
+            `Showing ${visibleCount} of ${totalCount} insurance contracts`,
         noPersonContracts: 'No insurance contract found for this person.',
         insuranceType: 'Insurance type',
         subject: 'Subject',
@@ -117,6 +119,8 @@ export const translations = {
         deletePersonConfirm: 'Opravdu chceš smazat tohoto pojištěnce?',
         insuredPersonDetail: 'Detail pojištěnce',
         insuranceContracts: 'Pojistné smlouvy',
+        showingInsuranceContracts: (visibleCount, totalCount) =>
+            `Zobrazeno ${visibleCount} z ${totalCount} pojistných smluv`,
         noPersonContracts: 'Tento pojištěnec nemá žádné pojistné smlouvy.',
         insuranceType: 'Typ pojištění',
         subject: 'Předmět pojištění',
@@ -147,8 +151,8 @@ export const translations = {
         next: 'Další',
         loading: 'Načítání...',
         showingInsuredPeople: (visibleCount, totalCount) =>
-            `Zobrazeno ${visibleCount} z ${totalCount} pojištěnců`,
-    },
+            `Zobrazeno ${visibleCount} z ${totalCount} pojištěnců`,      
+        },
 };
 
 export function getInsuranceTypeName(insuranceType, language) {

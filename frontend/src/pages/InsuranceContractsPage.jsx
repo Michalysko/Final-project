@@ -9,6 +9,7 @@ function InsuranceContractsPage({ authToken, t, language }) {
     const [editingContract, setEditingContract] = useState(null);
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
 
     const loadInsuranceContracts = useCallback((url = null) => {
         const apiUrl = url || 'http://127.0.0.1:8000/api/insurance-contracts/';
@@ -24,14 +25,17 @@ function InsuranceContractsPage({ authToken, t, language }) {
                     setInsuranceContracts(data);
                     setNextPage(null);
                     setPreviousPage(null);
+                    setTotalCount(data.length);
                 } else if (Array.isArray(data.results)) {
                     setInsuranceContracts(data.results);
                     setNextPage(data.next);
                     setPreviousPage(data.previous);
+                    setTotalCount(data.count || data.results.length);
                 } else {
                     setInsuranceContracts([]);
                     setNextPage(null);
                     setPreviousPage(null);
+                    setTotalCount(0);
                 }
             })
             .catch((error) => {
@@ -112,6 +116,14 @@ function InsuranceContractsPage({ authToken, t, language }) {
             />
 
             <h2>{t.insuranceContracts}</h2>
+
+            {!isLoading && (
+                <p className="result-count">
+                    {t.showingInsuranceContracts(
+                        insuranceContracts.length, totalCount
+                    )}
+                </p>
+            )}
 
             {isLoading ? (
                 <p className="loading-message">{t.loading}</p>
