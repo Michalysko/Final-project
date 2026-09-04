@@ -85,11 +85,11 @@ function LoginPage({ onLogin, t }) {
                     <p className="demo-login-title">{t.loginAsAdministrator}</p>
                     <p>
                         <span>{t.username}</span>
-                        <strong>demo_admin</strong>
+                        <strong>Use your local demo username</strong>
                     </p>
                     <p>
                         <span>{t.password}</span>
-                        <strong>superpassword2026</strong>
+                        <strong>Use your local demo password</strong>
                     </p>
                 </div>
 
