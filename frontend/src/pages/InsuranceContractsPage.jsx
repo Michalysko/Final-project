@@ -5,6 +5,7 @@ import InsuranceContractList from "../components/InsuranceContractList";
 
 function InsuranceContractsPage({ authToken, t, language }) {
     const [insuranceContracts, setInsuranceContracts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [editingContract, setEditingContract] = useState(null);
     const [nextPage, setNextPage] = useState(null);
     const [previousPage, setPreviousPage] = useState(null);
@@ -35,6 +36,9 @@ function InsuranceContractsPage({ authToken, t, language }) {
             })
             .catch((error) => {
                 console.error('Error loading insurance contracts:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }, [authToken]);
 
@@ -90,6 +94,11 @@ function InsuranceContractsPage({ authToken, t, language }) {
         }
     };
 
+    const handlePageChange = (url) => {
+        setIsLoading(true);
+        loadInsuranceContracts(url);
+    };
+
     return (
         <section>
             <InsuranceContractForm
@@ -104,25 +113,29 @@ function InsuranceContractsPage({ authToken, t, language }) {
 
             <h2>{t.insuranceContracts}</h2>
 
-            <InsuranceContractList
-                insuranceContracts={insuranceContracts}
-                onInsuranceContractEdit={setEditingContract}
-                onInsuranceContractDelete={handleInsuranceContractDelete}
-                t={t}
-                language={language}
-            />
+            {isLoading ? (
+                <p className="loading-message">{t.loading}</p>
+            ) : (
+                <InsuranceContractList
+                    insuranceContracts={insuranceContracts}
+                    onInsuranceContractEdit={setEditingContract}
+                    onInsuranceContractDelete={handleInsuranceContractDelete}
+                    t={t}
+                    language={language}
+                />
+            )}
             <div className="pagination-controls">
                 <button
                     type="button"
-                    onClick={() => loadInsuranceContracts(previousPage)}
-                    disabled={!previousPage}
+                    onClick={() => handlePageChange(previousPage)}
+                    disabled={!previousPage || isLoading}
                 >
                     {t.previous}
                 </button>
                 <button 
                     type="button"
-                    onClick={() => loadInsuranceContracts(nextPage)}
-                    disabled={!nextPage}
+                    onClick={() => handlePageChange(nextPage)}
+                    disabled={!nextPage || isLoading}
                 >
                     {t.next}
                 </button>
