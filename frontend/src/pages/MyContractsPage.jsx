@@ -3,6 +3,7 @@ import InsuranceContractList from "../components/InsuranceContractList";
 
 function MyContractsPage({ authToken, t, language }) {
     const [contracts, setContracts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
@@ -23,6 +24,9 @@ function MyContractsPage({ authToken, t, language }) {
             .catch((error) => {
                 console.error('Error loading contracts:', error);
                 setErrorMessage(t.noContractsLinked);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }, [authToken, t]);
 
@@ -30,10 +34,16 @@ function MyContractsPage({ authToken, t, language }) {
         <section>
             <h2>{t.myContracts}</h2>
 
-            {errorMessage && (
-                <p className="error-message">{errorMessage}</p>
+            {isLoading ? (
+                <p className="loading-message">{t.loading}</p>
+            ) : (
+                <>
+                    {errorMessage && (
+                        <p className="error-message">{errorMessage}</p>
+                    )}
+                    <InsuranceContractList insuranceContracts={contracts} t={t} language={language} />
+                </>
             )}
-            <InsuranceContractList insuranceContracts={contracts} t={t} language={language} />
         </section>
     );
 }

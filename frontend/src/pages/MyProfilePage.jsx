@@ -3,6 +3,7 @@ import InsuredPersonDetail from "../components/InsuredPersonDetail";
 
 function MyProfilePage({ authToken, t, language }) {
     const [profile, setProfile] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
@@ -23,16 +24,25 @@ function MyProfilePage({ authToken, t, language }) {
             .catch((error) => {
                 console.error('Error loading profile:', error);
                 setErrorMessage(t.noProfileLinked);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     }, [authToken, t]);
 
     return (
         <section>
             <h2>{t.myProfile}</h2>
-            {errorMessage && (
-                <p className="error-message">{errorMessage}</p>
+            {isLoading ? (
+                <p className="loading-message">{t.loading}</p>
+            ) : (
+                <>
+                    {errorMessage && (
+                        <p className="error-message">{errorMessage}</p>
+                    )}
+                    <InsuredPersonDetail person={profile} t={t} language={language} />
+                </>
             )}
-            <InsuredPersonDetail person={profile} t={t} language={language} />
         </section>
     );
 }
