@@ -383,3 +383,9 @@ button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
+
+.loading-message {
+  margin: 20px 0;
+  color: #64748b;
+  font-weight: 700;
+}

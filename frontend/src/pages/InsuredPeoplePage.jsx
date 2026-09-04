@@ -11,6 +11,7 @@ const emptySearchData = {
 
 function InsuredPeoplePage({ authToken, t }) {
     const [insuredPeople, setInsuredPeople] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [editingPerson, setEditingPerson] = useState(null);
     const [searchData, setSearchData] = useState({ ...emptySearchData });
     const [appliedSearchData, setAppliedSearchData] = useState({ ...emptySearchData });
@@ -47,7 +48,11 @@ function InsuredPeoplePage({ authToken, t }) {
             })
             .catch((error) => {
                 console.error('Error loading insured people:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
+
     }, [authToken, appliedSearchData]);
 
     useEffect(() => {
@@ -82,6 +87,7 @@ function InsuredPeoplePage({ authToken, t }) {
 
     const handleSearchSubmit = (event) => {
         event.preventDefault();
+        setIsLoading(true);
         setAppliedSearchData({ ...searchData });
     };
 
@@ -110,6 +116,11 @@ function InsuredPeoplePage({ authToken, t }) {
             .catch((error) => {
                 console.error('Error deleting insured person:', error);
             });
+    };
+
+    const handlePageChange = (url) => {
+        setIsLoading(true);
+        loadInsuredPeople(url);
     };
 
     return (
@@ -165,23 +176,27 @@ function InsuredPeoplePage({ authToken, t }) {
                 </button>
             </form>
             <h2>{t.navInsuredPeople}</h2>
-            <InsuredPersonList
-                insuredPeople={insuredPeople}
-                onPersonEdit={handlePersonEdit}
-                onPersonDelete={handlePersonDelete}
-                t={t}
-            />
+            {isLoading ? (
+                <p className="loading-message">{t.loading}</p>
+            ) : (
+                <InsuredPersonList
+                    insuredPeople={insuredPeople}
+                    onPersonEdit={handlePersonEdit}
+                    onPersonDelete={handlePersonDelete}
+                    t={t}
+                />
+            )}
             <div className="pagination-controls">
                 <button 
                     type="button"
-                    onClick={() => loadInsuredPeople(previousPage)}
+                    onClick={() => handlePageChange(previousPage)}
                     disabled={!previousPage}
                 >
                     {t.previous}
                 </button>
                 <button
                     type="button"
-                    onClick={() => loadInsuredPeople(nextPage)}
+                    onClick={() => handlePageChange(nextPage)}
                     disabled={!nextPage}
                 >
                     {t.next}

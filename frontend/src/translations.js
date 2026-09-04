@@ -69,6 +69,7 @@ export const translations = {
         noContractsLinked: 'No contracts are linked to this account.',
         previous: 'Previous',
         next: 'Next',
+        loading: 'Loading...'
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -140,6 +141,7 @@ export const translations = {
         noContractsLinked: 'K tomuto účtu nejsou přiřazené žádné smlouvy.',
         previous: 'Předchozí',
         next: 'Další',
+        loading: 'Načítání...'
     },
 };
 
