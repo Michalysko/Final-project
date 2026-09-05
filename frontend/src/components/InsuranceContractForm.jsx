@@ -1,5 +1,6 @@
 import { getInsuranceTypeName } from '../translations';
 import { useEffect, useState } from "react";
+import { apiRequest, getAuthHeaders, getJsonHeaders } from '../api/apiClient'
 
 const emptyFormData = {
     insured_person: '',
@@ -81,18 +82,11 @@ function InsuranceContractForm({
                 console.error('Error loading insured people:', error);
             });
 
-        fetch('http://127.0.0.1:8000/api/insurance-types/', {
-            headers: {
-                Authorization: `Token ${authToken}`
-            }
+        apiRequest('/insurance-types/', {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => response.json())
             .then((data) => {
-                const loadedInsuranceTypes = getApiList(data).sort((firstType, secondType) =>
-                    getInsuranceTypeName(firstType, language).localeCompare(getInsuranceTypeName(secondType, language))
-                );
-
-                setInsuranceTypes(loadedInsuranceTypes);
+                setInsuranceTypes(data.results || data || []);
             })
             .catch((error) => {
                 console.error('Error loading insurance types', error);
@@ -139,17 +133,14 @@ function InsuranceContractForm({
         }
 
         const url = editingContract
-            ? `http://127.0.0.1:8000/api/insurance-contracts/${editingContract.id}/`
-            : 'http://127.0.0.1:8000/api/insurance-contracts/';
+            ? `/insurance-contracts/${editingContract.id}/`
+            : '/insurance-contracts/';
 
         const method = editingContract ? 'PUT' : 'POST';
 
-        fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Token ${authToken}`
-            },
+        apiRequest(url, {
+            method,
+            headers: getJsonHeaders(authToken),
             body: JSON.stringify({
                 ...formData,
                 insured_person: Number(formData.insured_person),
@@ -157,17 +148,6 @@ function InsuranceContractForm({
                 amount: Number(formData.amount),
             }),
         })
-        .then((response) => {
-            if (!response.ok) {
-                return response.json().then((errorData) => {
-                    throw new Error(
-                        getApiErrorMessage(errorData, 'Unable to save insurance contract.')
-                    );
-                });
-            }
-            return response.json()
-        })
-
         .then((savedInsuranceContract) => {
             if (editingContract) {
                 onInsuranceContractUpdated(savedInsuranceContract);
@@ -178,7 +158,16 @@ function InsuranceContractForm({
         })
         .catch((error) => {
             console.error('Error creating insurance contract:', error);
-            setErrorMessage(error.message || 'Unable to save insurance contract.')
+            if (error.data) {
+                setErrorMessage(
+                    getApiErrorMessage(
+                        error.data,
+                        t.saveInsuranceContractError
+                    )
+                );
+            } else {
+                setErrorMessage(t.saveInsuranceContractError);
+            }
         });
     };
 

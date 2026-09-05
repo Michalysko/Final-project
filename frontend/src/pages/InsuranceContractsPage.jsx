@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 import InsuranceContractForm from "../components/InsuranceContractForm";
 import InsuranceContractList from "../components/InsuranceContractList";
+import { apiRequest, getAuthHeaders } from '../api/apiClient'
 
 const emptySearchData = {
     insured_person: '',
@@ -34,31 +35,16 @@ function InsuranceContractsPage({ authToken, t, language }) {
             searchParams.append('subject', appliedSearchData.subject);
         }
 
-        const apiUrl = url || `http://127.0.0.1:8000/api/insurance-contracts/?${searchParams.toString()}`;
+        const apiUrl = url || `/insurance-contracts/?${searchParams.toString()}`;
 
-        fetch(apiUrl, {
-            headers: {
-                Authorization: `Token ${authToken}`,
-            },
+        apiRequest(apiUrl, {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => response.json())
             .then((data) => {
-                if (Array.isArray(data)) {
-                    setInsuranceContracts(data);
-                    setNextPage(null);
-                    setPreviousPage(null);
-                    setTotalCount(data.length);
-                } else if (Array.isArray(data.results)) {
-                    setInsuranceContracts(data.results);
-                    setNextPage(data.next);
-                    setPreviousPage(data.previous);
-                    setTotalCount(data.count || data.results.length);
-                } else {
-                    setInsuranceContracts([]);
-                    setNextPage(null);
-                    setPreviousPage(null);
-                    setTotalCount(0);
-                }
+                setInsuranceContracts(data.results || data || []);
+                setNextPage(data.next || null);
+                setPreviousPage(data.previous || null);
+                setTotalCount(data.count || data.results?.length || data.length || 0);
             })
             .catch((error) => {
                 console.error('Error loading insurance contracts:', error);
@@ -94,30 +80,23 @@ function InsuranceContractsPage({ authToken, t, language }) {
         if (!confirmed) {
             return;
         }
-        fetch(`http://127.0.0.1:8000/api/insurance-contracts/${insuranceContractId}/`,
-            {
+        apiRequest(`/insurance-contracts/${insuranceContractId}/`, {
                 method: 'DELETE',
-                headers: {
-                    Authorization: `Token ${authToken}`,
-                },
-            }
-        )
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Delete request failed');
-                }
+                headers: getAuthHeaders(authToken),
+        })
+            .then(() => {
                 setInsuranceContracts(
                     insuranceContracts.filter(
-                        (contract) => contract.id != insuranceContractId
+                        (insuranceContract) => insuranceContract.id !== insuranceContractId
                     )
                 );
+                if (editingContract?.id === insuranceContractId) {
+                    setEditingContract(null);
+                }
             })
             .catch((error) => {
                 console.error('Error deleting insurance contract:', error);
             });
-        if (editingContract?.id === insuranceContractId) {
-            setEditingContract(null);
-        }
     };
 
     const handlePageChange = (url) => {
