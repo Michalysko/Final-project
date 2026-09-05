@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { apiRequest } from "../api/apiClient";
 
 function LoginPage({ onLogin, t }) {
     const navigate = useNavigate();
@@ -23,19 +24,13 @@ function LoginPage({ onLogin, t }) {
         event.preventDefault();
         setErrorMessage('');
 
-        fetch('http://127.0.0.1:8000/api/login/', {
+        apiRequest('/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(formData),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Login failed');
-                }
-                return response.json();
-            })
             .then((data) => {
                 localStorage.setItem('authToken', data.token);
                 onLogin(data.token);

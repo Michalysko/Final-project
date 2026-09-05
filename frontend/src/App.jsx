@@ -9,6 +9,7 @@ import MyContractsPage from './pages/MyContractsPage';
 import MyProfilePage from './pages/MyProfilePage';
 import InsuredPersonDetailPage from './pages/InsuredPersonDetailPage';
 import { translations } from './translations';
+import { apiRequest, getAuthHeaders } from './api/apiClient';
 import './App.css';
 
 function App() {
@@ -42,17 +43,9 @@ function App() {
             return;
         }
 
-        fetch('http://127.0.0.1:8000/api/me/', {
-            headers: {
-                Authorization: `Token ${authToken}`,
-            },
+        apiRequest('/me/', {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Current user request failed');
-                }
-                return response.json();
-            })
             .then((data) => {
                 setCurrentUser(data);
             })
