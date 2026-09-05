@@ -1,34 +1,31 @@
 import { useState, useEffect } from "react";
 import InsuredPersonDetail from "../components/InsuredPersonDetail";
+import { apiRequest, getAuthHeaders } from '../api/apiClient';
 
 function MyProfilePage({ authToken, t, language }) {
     const [profile, setProfile] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
+    const noProfileLinkedMessage = t.noProfileLinked
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/my-profile/', {
-            headers: {
-                Authorization: `Token ${authToken}`,
-            }
+        if (!authToken) {
+            return
+        }
+        apiRequest('/my-profile/', {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Profile request failed');
-                }
-                return response.json();
-            })
             .then((data) => {
                 setProfile(data);
             })
             .catch((error) => {
                 console.error('Error loading profile:', error);
-                setErrorMessage(t.noProfileLinked);
+                setErrorMessage(noProfileLinkedMessage);
             })
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [authToken, t]);
+    }, [authToken, noProfileLinkedMessage]);
 
     return (
         <section>

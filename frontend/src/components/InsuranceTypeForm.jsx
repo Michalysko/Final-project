@@ -25,7 +25,7 @@ const getApiErrorMessage = (errorData, fallbackMessage) => {
 
     const messages = Object.entries(errorData).flatMap(([field, errors]) => {
         if (Array.isArray(errors)) {
-            return errors.map(() => `${field}: ${errors}`);
+            return errors.map((error) => `${field}: ${error}`);
         }
 
         return [`${field}: ${errors}`];

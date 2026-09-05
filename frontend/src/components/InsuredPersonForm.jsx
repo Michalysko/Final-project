@@ -89,19 +89,8 @@ function InsuredPersonForm({
         apiRequest(url, {
             method,
             headers: getJsonHeaders(authToken), 
-            body: JSON.stringify(formData),
+            body: JSON.stringify(requestData),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.json().then((errorData) => {
-                        throw new Error(
-                            getApiErrorMessage(errorData, t.unableToSavePerson)
-                        );
-                    });
-                }
-                return response.json();
-            })
-
             .then((savedPerson) => {
                 if (editingPerson) {
                     onPersonUpdated(savedPerson);
@@ -112,7 +101,13 @@ function InsuredPersonForm({
             })
             .catch((error) => {
                 console.error('Error saving insured person:', error);
-                setErrorMessage(error.message || t.unableToSavePerson);
+                if (error.data) {
+                    setErrorMessage(
+                        getApiErrorMessage(error.data, t.unableToSavePerson)
+                    );
+                } else {
+                    setErrorMessage(t.unableToSavePerson);
+                }
             });
     };
 

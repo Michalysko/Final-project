@@ -1,32 +1,30 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import InsuredPersonDetail from '../components/InsuredPersonDetail';
+import { apiRequest, getAuthHeaders } from "../api/apiClient";
 
 function InsuredPersonDetailPage({ authToken, t, language }) {
     const { personId } = useParams();
     const [person, setPerson] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
 
+    const unableToLoadPersonDetailMessage = t.unableToLoadPersonDetail;
+
     useEffect(() => {
-        fetch(`http://127.0.0.1:8000/api/insured-people/${personId}/`, {
-            headers: {
-                Authorization: `Token ${authToken}`,
-            },
+        if (!authToken) {
+            return;
+        }
+        apiRequest(`/insured-people/${personId}/`, {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Insured person detail request failed');
-                }
-                return response.json();
-            })
             .then((data) => {
                 setPerson(data);
             })
             .catch((error) => {
                 console.error('Error loading insured person detail:', error);
-                setErrorMessage(t.unableToLoadPersonDetail);
+                setErrorMessage(unableToLoadPersonDetailMessage);
             });
-    }, [authToken, personId, t]);
+    }, [authToken, personId, unableToLoadPersonDetailMessage]);
 
     return (
         <section>

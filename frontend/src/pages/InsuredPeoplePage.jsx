@@ -35,7 +35,7 @@ function InsuredPeoplePage({ authToken, t }) {
             searchParams.append('phone_number', appliedSearchData.phone_number);
         }
 
-        const apiUrl = url || `http://127.0.0.1:8000/api/insured-people/?${searchParams.toString()}`;
+        const apiUrl = url || `/insured-people/?${searchParams.toString()}`;
 
         apiRequest(apiUrl, {
             headers: getAuthHeaders(authToken),   

@@ -69,12 +69,12 @@ function InsuranceContractForm({
     const [insuranceTypes, setInsuranceTypes] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/insured-people/', {
-            headers: {
-                Authorization: `Token ${authToken}`,
-            },
+        if (!authToken) {
+            return;
+        }
+        apiRequest('/insured-people/', {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => response.json())
             .then((data) => {
                 setInsuredPeople(getApiList(data));
             })
@@ -91,7 +91,7 @@ function InsuranceContractForm({
             .catch((error) => {
                 console.error('Error loading insurance types', error);
             });
-    }, [authToken, language]);
+    }, [authToken]);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
