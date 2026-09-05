@@ -68,8 +68,8 @@ function InsuredPersonForm({
         setErrorMessage('');
 
         const url = editingPerson
-            ? `http://127.0.0.1:8000/api/insured-people/${editingPerson.id}/`
-            : 'http://127.0.0.1:8000/api/insured-people/';
+            ? `/insured-people/${editingPerson.id}/`
+            : '/insured-people/';
 
         const method = editingPerson ? 'PUT' : 'POST';
 

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiRequest, getJsonHeaders } from '../api/apiClient'
 
 const emptyFormData = {
     name_en: '',
@@ -61,33 +62,19 @@ function InsuranceTypeForm({
         setErrorMessage('');
         
         const url = editingInsuranceType
-            ? `http://127.0.0.1:8000/api/insurance-types/${editingInsuranceType.id}/`
-            : 'http://127.0.0.1:8000/api/insurance-types/';
+            ? `/insurance-types/${editingInsuranceType.id}/`
+            : '/insurance-types/';
 
         const method = editingInsuranceType ? 'PUT' : 'POST';
 
-        fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Token ${authToken}`
-            },
+        apiRequest(url, {
+            method,
+            headers: getJsonHeaders(authToken),
             body: JSON.stringify({
                 ...formData,
                 default_amount: Number(formData.default_amount),
             }),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    return response.json().then((errorData) => {
-                        throw new Error(
-                            getApiErrorMessage(errorData, 'Unable to save insurance type.')
-                        );
-                    });
-                }
-                return response.json();
-            })
-
             .then((savedInsuranceType) => {
                 if (editingInsuranceType) {
                     onInsuranceTypeUpdated(savedInsuranceType);
@@ -98,7 +85,16 @@ function InsuranceTypeForm({
             })
             .catch((error) => {
                 console.error('Error creating insurance type:', error);
-                setErrorMessage(error.message || 'Unable to save insurance type.');
+                if (error.data) {
+                    setErrorMessage(
+                        getApiErrorMessage(
+                            error.data,
+                            'Unable to save insurance type'
+                        )
+                    );
+                } else {
+                    setErrorMessage('Unable to save insurance type.')
+                }
             });
     };
 
