@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 
 import InsuredPersonForm from '../components/InsuredPersonForm';
 import InsuredPersonList from '../components/InsuredPersonList';
+import { apiRequest, getAuthHeaders } from '../api/apiClient';
 
 const emptySearchData = {
     name: '',
@@ -36,12 +37,9 @@ function InsuredPeoplePage({ authToken, t }) {
 
         const apiUrl = url || `http://127.0.0.1:8000/api/insured-people/?${searchParams.toString()}`;
 
-        fetch(apiUrl, {
-            headers: {
-                Authorization: `Token ${authToken}`,
-            },
+        apiRequest(apiUrl, {
+            headers: getAuthHeaders(authToken),   
         })
-            .then((response) => response.json())
             .then((data) => {
                 setInsuredPeople(data.results || data || []);
                 setNextPage(data.next || null);
@@ -104,16 +102,11 @@ function InsuredPeoplePage({ authToken, t }) {
         if (!confirmed) {
             return;
         }
-        fetch(`http://127.0.0.1:8000/api/insured-people/${personId}/`, {
+        apiRequest(`/insured-people/${personId}/`, {
             method: 'DELETE',
-            headers: {
-                Authorization: `Token ${authToken}`
-            }
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Delete request failed');
-                }
+            .then(() => {
                 setInsuredPeople(
                     insuredPeople.filter((person) => person.id !== personId)
                 );

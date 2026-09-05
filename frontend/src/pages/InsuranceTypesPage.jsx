@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import InsuranceTypeForm from "../components/InsuranceTypeForm";
 import InsuranceTypeList from "../components/InsuranceTypeList";
+import { apiRequest, getAuthHeaders } from "../api/apiClient";
 
 function InsuranceTypesPage({ authToken, t, language }) {
     const [insuranceTypes, setInsuranceTypes] = useState([]);
@@ -9,12 +10,12 @@ function InsuranceTypesPage({ authToken, t, language }) {
     const [editingInsuranceType, setEditingInsuranceType] = useState(null)
 
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/api/insurance-types/', {
-            headers: {
-                Authorization: `Token ${authToken}`
-            },
+        if (!authToken) {
+            return;
+        }
+        apiRequest('/insurance-types/', {
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => response.json())
             .then((data) => {
                 if (Array.isArray(data)) {
                     setInsuranceTypes(data);
@@ -53,30 +54,24 @@ function InsuranceTypesPage({ authToken, t, language }) {
             return;
         }
 
-        fetch(`http://127.0.0.1:8000/api/insurance-types/${insuranceTypeId}/`, {
+        apiRequest(`/insurance-types/${insuranceTypeId}/`, {
             method: 'DELETE',
-            headers: {
-                Authorization: `Token ${authToken}`
-            }
+            headers: getAuthHeaders(authToken),
         })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Delete request failed');
-                }
-
+            .then(() => {
                 setInsuranceTypes(
                     insuranceTypes.filter(
                         (insuranceType) =>
-                            insuranceType.id != insuranceTypeId
+                            insuranceType.id !== insuranceTypeId
                     )
                 );
+                if (editingInsuranceType?.id === insuranceTypeId) {
+                    setEditingInsuranceType(null);
+                }
             })
             .catch((error) => {
                 console.error('Error deleting insurance type:', error);
             });
-            if (editingInsuranceType?.id === insuranceTypeId) {
-                setEditingInsuranceType(null);
-            }
     };
     return (
         <section>

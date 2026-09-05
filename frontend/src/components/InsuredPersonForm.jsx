@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { apiRequest, getJsonHeaders } from "../api/apiClient";
 
 const emptyFormData = {
     first_name: '',
@@ -85,13 +86,10 @@ function InsuredPersonForm({
             requestData.password = formData.password;
         }
 
-        fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Token ${authToken}`
-            },
-            body: JSON.stringify(requestData),
+        apiRequest(url, {
+            method,
+            headers: getJsonHeaders(authToken), 
+            body: JSON.stringify(formData),
         })
             .then((response) => {
                 if (!response.ok) {
