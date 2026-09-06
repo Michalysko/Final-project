@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
-from django.conf.global_settings import STORAGES, CSRF_TRUSTED_ORIGINS, CSRF_COOKIE_SECURE
+from django.conf.global_settings import STORAGES, CSRF_TRUSTED_ORIGINS, CSRF_COOKIE_SECURE, SECURE_HSTS_SECONDS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -167,3 +167,8 @@ REST_FRAMEWORK = {
 SECURE_SSL_REDIRECT = os.getenv('DJANGO_SECURE_SSL_REDIRECT', 'False') == 'True'
 SESSION_COOKIE_SECURE = os.getenv('DJANGO_SESSION_COOKIE_SECURE', 'False') == 'True'
 CSRF_COOKIE_SECURE = os.getenv('DJANGO_CSRF_COOKIE_SECURE', 'False') == 'True'
+SECURE_HSTS_SECONDS = int(os.getenv('DJANGO_SECURE_HSTS_SECONDS', '0'))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = (
+    os.getenv('DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS', 'False') == 'True'
+)
+SECURE_HSTS_PRELOAD = os.getenv('DJANGO_SECURE_HSTS_PRELOAD', 'False') == 'True'
