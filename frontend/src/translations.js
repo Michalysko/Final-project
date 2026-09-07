@@ -79,6 +79,10 @@ export const translations = {
         insuredPersonPlaceholder: 'First name or last name',
         insuranceTypePlaceholder: 'Insurance type',
         subjectPlaceholder: 'Subject',
+        demoAccess: 'Demo access',
+        demoAdmin: 'Administrator account',
+        demoClient: 'Client account',
+        demoBackendNote: 'The backend is hosted on a free Render instance, so the first request after inactivity may take a short moment.',
     },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -159,8 +163,12 @@ export const translations = {
         searchInsuranceContracts: 'Vyhledat pojistné smlouvy',
         insuredPersonPlaceholder: 'Jméno nebo příjmení',
         insuranceTypePlaceholder: 'Typ pojištění',
-        subjectPlaceholder: 'Předmět pojištění',      
-        },
+        subjectPlaceholder: 'Předmět pojištění',
+        demoAccess: 'Demo přístup',
+        demoAdmin: 'Administrátorský účet',
+        demoClient: 'Klientský účet',
+        demoBackendNote: 'Backend běží na bezplatné službě Render, takže první požadavek po delší neaktivitě může chvíli trvat,',      
+    },
 };
 
 export function getInsuranceTypeName(insuranceType, language) {

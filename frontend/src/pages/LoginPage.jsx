@@ -77,15 +77,33 @@ function LoginPage({ onLogin, t }) {
                 </div>
 
                 <div className="demo-login-box">
-                    <p className="demo-login-title">{t.loginAsAdministrator}</p>
-                    <p>
-                        <span>{t.username}</span>
-                        <strong>Use your local demo username</strong>
-                    </p>
-                    <p>
-                        <span>{t.password}</span>
-                        <strong>Use your local demo password</strong>
-                    </p>
+                    <p className="demo-login-title">{t.demoAccess}</p>
+
+                    <div className="demo-account">
+                        <p className="demo-account-role">{t.demoAdmin}</p>
+                        <p>
+                            <span>{t.username}</span>
+                            <strong>demo_admin</strong>
+                        </p>
+                        <p>
+                            <span>{t.password}</span>
+                            <strong>superpassword2026</strong>
+                        </p>
+                    </div>
+
+                    <div className="demo-account">
+                        <p className="demo-account-role">{t.demoClient}</p>
+                        <p>
+                            <span>{t.username}</span>
+                            <strong>demo_client</strong>
+                        </p>
+                        <p>
+                            <span>{t.password}</span>
+                            <strong>clientpassword2026</strong>
+                        </p>
+                    </div>
+                    <p className="demo-login-note">{t.demoBackendNote}</p>
+                        
                 </div>
 
                 <button type="submit">{t.login}</button>

@@ -321,6 +321,29 @@ button:hover {
   background-color: #f8fafc;
 }
 
+.demo-account {
+  padding: 12px 0;
+  border-top: 1px solid #d8e2e0;
+}
+
+.demo-account:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.demo-account-role {
+  margin: 0 0 8px;
+  color: #147a6c;
+  font-weight: 700;
+}
+
+.demo-login-note {
+  margin: 12px 0 0;
+  color: #5f6f6b;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .demo-login-box p {
   display: flex;
   justify-content: space-between;
