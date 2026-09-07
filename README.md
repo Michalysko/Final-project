@@ -6,7 +6,7 @@ A deployed full-stack portfolio application for managing insured people, insuran
 
 - Live application: https://insurance-app-jade-pi.vercel.app
 - Backend API: https://insurance-app-api-dx6t.onrender.com/api
-- GitHub repository: https://github.com/Michalysko/Final-project
+- GitHub repository: https://github.com/Michalysko/insurance-management-app
 
 The backend is hosted on a free Render instance, so the first request after a period of inactivity may take a short moment while the service wakes up.
 
@@ -90,7 +90,7 @@ This project was built as a practical full-stack portfolio application. It demon
 ## Project Structure
 
 ```text
-Final-project/
+Insurance App/
 ├── backend/
 │   ├── backend/
 │   │   ├── settings.py
@@ -171,8 +171,8 @@ The main CRUD endpoints are implemented with Django REST Framework viewsets and 
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/Michalysko/Final-project.git
-cd Final-project
+git clone https://github.com/Michalysko/insurance-management-app.git
+cd insurance-management-app
 ```
 
 ### 2. Backend Setup
