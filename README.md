@@ -343,7 +343,17 @@ The deployed demo uses:
 
 ## Screenshots
 
-Screenshots will be added after the main recruiter-facing UI polish is complete.
+### Login Page
+
+![Login page](docs/screenshots/login-page.png)
+
+### Administrator - Insured People
+
+![Administrator - insured people page](docs/screenshots/admin-insured-people.png)
+
+### Client - My Profile
+
+![Client - my profile page](docs/screenshots/client-profile.png)
 
 ## Roadmap
 
