@@ -1,12 +1,40 @@
 # Insurance App
 
-A full-stack web application for managing insured people, insurance types, and insurance contracts. The project includes a Django REST API backend and a React frontend with role-based access for administrators and insured clients.
+A deployed full-stack portfolio application for managing insured people, insurance types, and insurance contracts. The project uses a Django REST API backend, a React frontend, token authentication, role-based access, PostgreSQL in production, and bilingual Czech/English UI support.
 
-This is my final portfolio project and is currently focused on demonstrating practical full-stack development skills: data modeling, REST API design, authentication, CRUD operations, pagination, search, frontend state management, and bilingual UI support.
+## Live Demo
+
+- Live application: https://insurance-app-jade-pi.vercel.app
+- Backend API: https://insurance-app-api-dx6t.onrender.com/api
+- GitHub repository: https://github.com/Michalysko/Final-project
+
+The backend is hosted on a free Render instance, so the first request after a period of inactivity may take a short moment while the service wakes up.
+
+## Demo Access
+
+Administrator account:
+
+```text
+Username: demo_admin
+Password: superpassword2026
+```
+
+Client account:
+
+```text
+Username: demo_client
+Password: clientpassword2026
+```
+
+The administrator can manage insured people, insurance types, and insurance contracts. The client can view only their own profile and their own contracts.
+
+## Project Purpose
+
+This project was built as a practical full-stack portfolio application. It demonstrates how a CRUD system can be structured with a separate REST API, relational data, authentication, role-based permissions, search, pagination, validation, deployment configuration, and a React user interface.
 
 ## Features
 
-- Token-based login
+- Token-based authentication
 - Administrator and insured client roles
 - CRUD management for insured people
 - CRUD management for insurance types
@@ -14,10 +42,14 @@ This is my final portfolio project and is currently focused on demonstrating pra
 - Client profile page
 - Client contract overview
 - Backend search for insured people by name, address, and phone number
+- Search and filtering for insurance contracts
 - Pagination for larger datasets
 - Czech and English language switcher
-- Basic frontend validation
-- Environment-based Django secret key configuration
+- Bilingual insurance type names
+- Frontend and backend form validation
+- Centralized frontend API client
+- Environment-based configuration for local and production environments
+- Production deployment with separate frontend, backend, and database services
 
 ## Tech Stack
 
@@ -26,9 +58,13 @@ This is my final portfolio project and is currently focused on demonstrating pra
 - Python
 - Django
 - Django REST Framework
-- SQLite
 - Django Token Authentication
+- PostgreSQL in production
+- SQLite for local development
 - django-cors-headers
+- dj-database-url
+- WhiteNoise
+- Gunicorn
 
 ### Frontend
 
@@ -37,6 +73,12 @@ This is my final portfolio project and is currently focused on demonstrating pra
 - React Router
 - Vite
 - CSS
+
+### Deployment
+
+- Vercel for the React frontend
+- Render for the Django backend
+- Neon PostgreSQL for the production database
 
 ### Development Tools
 
@@ -54,20 +96,27 @@ Final-project/
 │   │   ├── settings.py
 │   │   └── urls.py
 │   ├── insured/
+│   │   ├── management/
+│   │   ├── migrations/
 │   │   ├── models.py
 │   │   ├── serializers.py
-│   │   ├── views.py
 │   │   ├── urls.py
-│   │   └── migrations/
-│   └── manage.py
+│   │   └── views.py
+│   ├── .env.example
+│   ├── manage.py
+│   └── requirements.txt
 ├── frontend/
+│   ├── public/
 │   ├── src/
+│   │   ├── api/
 │   │   ├── components/
 │   │   ├── pages/
-│   │   ├── App.jsx
 │   │   ├── App.css
+│   │   ├── App.jsx
 │   │   └── translations.js
+│   ├── .env.example
 │   ├── package.json
+│   ├── vercel.json
 │   └── vite.config.js
 ├── .gitignore
 └── README.md
@@ -77,26 +126,28 @@ Final-project/
 
 The application is built around three main domain entities:
 
-- `InsuredPerson` - stores personal data about insured clients.
-- `InsuranceType` - stores available insurance categories in Czech and English.
-- `InsuranceContract` - connects an insured person with an insurance type and stores contract-specific data such as subject, amount, contract date, and validity date.
+- `InsuredPerson` stores personal data about insured clients and can be linked to a Django user account.
+- `InsuranceType` stores available insurance categories in Czech and English with a default amount.
+- `InsuranceContract` connects an insured person with an insurance type and stores contract-specific data such as subject, amount, contract date, and validity date.
 
 ## User Roles
 
 ### Administrator
 
-The administrator can manage:
+The administrator can:
 
-- insured people,
-- insurance types,
-- insurance contracts.
+- create, edit, delete, and search insured people,
+- create, edit, and delete insurance types,
+- create, edit, delete, and search insurance contracts,
+- switch the interface between Czech and English.
 
 ### Insured Client
 
-The insured client can view:
+The insured client can:
 
-- their own profile,
-- their own insurance contracts.
+- view their own profile,
+- view their own insurance contracts,
+- use the Czech/English language switcher.
 
 ## API Endpoints
 
@@ -113,7 +164,7 @@ GET  /api/my-contracts/
 /api/insurance-contracts/
 ```
 
-The main CRUD endpoints are implemented with Django REST Framework routers.
+The main CRUD endpoints are implemented with Django REST Framework viewsets and routers.
 
 ## Local Development Setup
 
@@ -144,18 +195,22 @@ On Windows:
 ../venv/Scripts/activate
 ```
 
-````md
 Install backend dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Create a `.env` file inside the `backend/` folder:
+Create a `.env` file inside the `backend/` folder. You can use `backend/.env.example` as a template.
+
+Minimum local configuration:
 
 ```env
 DJANGO_SECRET_KEY=your-local-secret-key
 DJANGO_DEBUG=True
+DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
+DJANGO_CORS_ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+DJANGO_CSRF_TRUSTED_ORIGINS=http://127.0.0.1:5173,http://localhost:5173
 ```
 
 Run migrations:
@@ -164,7 +219,7 @@ Run migrations:
 python manage.py migrate
 ```
 
-Create an admin user:
+Create an admin user if needed:
 
 ```bash
 python manage.py createsuperuser
@@ -196,6 +251,12 @@ Install frontend dependencies:
 npm install
 ```
 
+Create a `.env` file inside the `frontend/` folder. You can use `frontend/.env.example` as a template.
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000/api
+```
+
 Start the development server:
 
 ```bash
@@ -210,14 +271,26 @@ http://localhost:5173/
 
 ## Environment Variables
 
-The project expects the following local environment variables in `backend/.env`:
+The project uses environment variables for both local development and production deployment.
+
+Backend examples:
 
 ```env
-DJANGO_SECRET_KEY=your-local-secret-key
-DJANGO_DEBUG=True
+DJANGO_SECRET_KEY=your-secret-key
+DJANGO_DEBUG=False
+DJANGO_ALLOWED_HOSTS=your-backend-domain.onrender.com
+DJANGO_CORS_ALLOWED_ORIGINS=https://your-frontend-domain.vercel.app
+DJANGO_CSRF_TRUSTED_ORIGINS=https://your-frontend-domain.vercel.app
+DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DB_NAME
 ```
 
-The `.env` file is intentionally ignored by Git and must not be committed.
+Frontend example:
+
+```env
+VITE_API_BASE_URL=https://your-backend-domain.onrender.com/api
+```
+
+Real `.env` files are intentionally ignored by Git and must not be committed.
 
 ## Quality Checks
 
@@ -226,7 +299,7 @@ The `.env` file is intentionally ignored by Git and must not be committed.
 ```bash
 cd backend
 python manage.py check
-python manage.py test
+python manage.py makemigrations --check
 ```
 
 ### Frontend
@@ -242,44 +315,48 @@ Current project status:
 - Django system check passes.
 - Frontend lint passes.
 - Frontend production build passes.
-- Backend tests are planned as a next improvement.
+- The application is deployed and available as a public demo.
+- Backend automated tests are planned as a future improvement.
 
 ## Security Notes
 
-This repository is public, so sensitive local data must stay out of version control.
+This repository is public, so sensitive data is kept outside version control.
 
 Ignored files include:
 
 - `.env`
 - `backend/.env`
 - `backend/db.sqlite3`
+- `backend/staticfiles/`
 - `frontend/node_modules/`
 - `frontend/dist/`
 - `venv/`
 
-Before production deployment, the project should use:
+The deployed demo uses:
 
 - `DEBUG=False`,
-- secure `ALLOWED_HOSTS`,
-- production CORS settings,
-- HTTPS,
-- a production database such as PostgreSQL.
+- environment-based `SECRET_KEY`,
+- production `ALLOWED_HOSTS`,
+- configured CORS and CSRF trusted origins,
+- HTTPS-only production settings,
+- PostgreSQL hosted on Neon.
+
+## Screenshots
+
+Screenshots will be added after the main recruiter-facing UI polish is complete.
 
 ## Roadmap
 
 Planned improvements:
 
 - Add screenshots to this README.
-- Add `.env.example`.
-- Add `requirements.txt` for backend dependencies.
-- Add backend serializer validation for age, phone number, contract amount, and contract dates.
-- Add loading, success, and error states in the frontend.
-- Add better pagination controls with current page and total count.
-- Add search and filtering for insurance contracts.
-- Move frontend API calls into a dedicated API layer.
+- Improve the public demo login page with clearer demo account information.
+- Add a small dashboard with summary statistics.
 - Add automated backend tests for authentication, permissions, CRUD operations, and search.
-- Add an admin dashboard with key statistics.
-- Prepare production deployment.
+- Improve demo data handling with a repeatable seed command.
+- Add safer demo-mode restrictions for destructive administrator actions.
+- Polish responsive design for mobile and tablet viewports.
+- Improve accessibility details such as labels, focus states, and keyboard navigation.
 
 ## What I Learned
 
@@ -293,8 +370,10 @@ While building this project, I practiced:
 - handling pagination and search,
 - managing state in React,
 - working with Git and GitHub,
+- preparing environment-based configuration,
+- deploying a full-stack application with separate frontend, backend, and database services,
 - improving project structure and security for a public repository.
 
 ## Project Status
 
-The application is functional and actively being improved as a portfolio project. It is not intended for real insurance production use yet.
+The application is functional, deployed, and actively being improved as a portfolio project. It is intended as a learning and demonstration project, not as production software for real insurance operations.
