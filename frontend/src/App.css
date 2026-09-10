@@ -385,6 +385,23 @@ button:hover {
   .demo-login-box strong {
     text-align: left;
   }
+
+  .main-nav .secondary-button {
+    margin-left: 0;
+  }
+
+  .insured-person-row,
+  .insurance-type-row,
+  .insurance-contract-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .row-actions,
+  .list-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -394,12 +411,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .main-nav .secondary-button {
   margin-left: auto;
-}
-
-@media (max-width: 700px) {
-  .main-nav .secondary-button {
-    margin-left: 0;
-  }
 }
 
 button:disabled {
