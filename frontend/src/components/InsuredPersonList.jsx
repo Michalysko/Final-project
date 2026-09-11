@@ -23,11 +23,11 @@ function InsuredPersonList({
             <tbody>
                 {insuredPeople.map((person) => (
                     <tr key={person.id}>
-                        <td>{person.first_name}</td>
-                        <td>{person.last_name}</td>
-                        <td>{person.age}</td>
-                        <td>{person.phone_number}</td>
-                        <td className="actions-cell">
+                        <td data-label={t.firstName}>{person.first_name}</td>
+                        <td data-label={t.lastName}>{person.last_name}</td>
+                        <td data-label={t.age}>{person.age}</td>
+                        <td data-label={t.phoneNumber}>{person.phone_number}</td>
+                        <td data-label={t.actions} className="actions-cell">
                             <Link
                                 className="secondary-button action-link"
                                 to={`/insured-people/${person.id}`}

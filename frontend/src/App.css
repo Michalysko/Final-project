@@ -372,37 +372,6 @@ button:hover {
   overflow-wrap: anywhere;
 }
 
-@media (max-width: 700px) {
-  .login-form {
-    padding: 20px;
-  }
-
-  .demo-login-box p {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .demo-login-box strong {
-    text-align: left;
-  }
-
-  .main-nav .secondary-button {
-    margin-left: 0;
-  }
-
-  .insured-person-row,
-  .insurance-type-row,
-  .insurance-contract-row {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .row-actions,
-  .list-actions {
-    justify-content: flex-start;
-    flex-wrap: wrap;
-  }
-}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   filter: none;
@@ -428,4 +397,95 @@ button:disabled {
   margin: -12px 0 16px;
   color: #64748b;
   font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .login-form {
+    padding: 20px;
+  }
+
+  .demo-login-box p {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .demo-login-box strong {
+    text-align: left;
+  }
+
+  .main-nav .secondary-button {
+    margin-left: 0;
+  }
+  
+  table,
+  thead, 
+  tbody,
+  tr,
+  th,
+  td {
+    display: block;
+  }
+
+  thead {
+    display: none;
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0 14px;
+  }
+
+  tr {
+    padding: 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 18px rgba(31, 41, 55, 0.08);
+  }
+
+  td {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-bottom: 1px solid #eef2f7;
+    text-align: right;
+  }
+
+  td:last-child {
+    border-bottom: none;
+  }
+
+  td::before {
+    content: attr(data-label);
+    color: #64784b;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .actions-cell {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    padding-top: 12px;
+    text-align: left;
+  }
+
+  .actions-cell::before {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .actions-cell button,
+  .actions-cell .action-link {
+    width: 100%;
+    margin-right: 0;
+    padding: 10px 12px;
+  }
+}
+
+@media (max-width: 428px) {
+  .actions-cell {
+    grid-template-columns: 1fr;
+  }
 }

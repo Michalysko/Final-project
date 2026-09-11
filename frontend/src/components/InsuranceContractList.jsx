@@ -32,14 +32,20 @@ function InsuranceContractList({
             <tbody>
                 {contracts.map((contract) => (
                     <tr key={contract.id}>
-                        <td>{contract.insured_person_name}</td>
-                        <td>{getContractInsuranceTypeName(contract, language)}</td>
-                        <td>{contract.subject}</td>
-                        <td>{contract.amount}</td>
-                        <td className="nowrap">{contract.contract_date}</td>
-                        <td className='nowrap'>{contract.valid_until}</td>
+                        <td data-label={t.insuredPerson}>{contract.insured_person_name}</td>
+                        <td data-label={t.insuranceType}>
+                            {getContractInsuranceTypeName(contract, language)}
+                        </td>
+                        <td data-label={t.subject}>{contract.subject}</td>
+                        <td data-label={t.amount}>{contract.amount}</td>
+                        <td data-label={t.contractDate} className="nowrap">
+                            {contract.contract_date}
+                        </td>
+                        <td data-label={t.validUntil} className='nowrap'>
+                            {contract.valid_until}
+                        </td>
                         {hasActions && (
-                            <td className="actions-cell">
+                            <td data-label={t.actions} className="actions-cell">
                                 {canEdit && (
                                     <button
                                         type="button"

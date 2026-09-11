@@ -22,9 +22,9 @@ function InsuranceTypeList({
             <tbody>
                 {insuranceTypes.map((insuranceType) => (
                     <tr key={insuranceType.id}>
-                        <td>{getInsuranceTypeName(insuranceType, language)}</td>
-                        <td>{insuranceType.default_amount}</td>
-                        <td className="actions-cell">
+                        <td data-label={t.name}>{getInsuranceTypeName(insuranceType, language)}</td>
+                        <td data-label={t.defaultAmount}>{insuranceType.default_amount}</td>
+                        <td data-label={t.actions} className="actions-cell">
                             <button
                                 type="button"
                                 className="secondary-button"
