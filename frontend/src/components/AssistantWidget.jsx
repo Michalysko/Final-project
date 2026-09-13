@@ -85,7 +85,7 @@ function AssistantWidget({ t }) {
                                     target="_blank"
                                     rel="noreferrer"
                                 >
-                                    {t.porfolio}
+                                    {t.portfolio}
                                 </a>
                                 <a 
                                     href="https://github.com/Michalysko"

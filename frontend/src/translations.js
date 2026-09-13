@@ -212,7 +212,7 @@ export const translations = {
         assistantTechnologiesQuestion: 'Jaké technologie aplikace používá?',
         assistantTechnologiesAnswer:
             'Aplikace používá React a JavaScript na frontendu, Django REST Framework na backendu, PostgreSQL jako produkční databázi a tokenové přihlašování.',
-        porfolio: 'Webové portfolio',
+        portfolio: 'Webové portfolio',
         assistantAuthorQuestion: 'Kdo aplikaci vytvořil?',
         assistantAuthorAnswer: 
             'Tuto aplikaci vytvořil Michal Růžička, juniorní full-stack vývojář zaměřený na tvorbu webových aplikací pomocí Reactu, Django REST Frameworku a PostgreSQL.'     
