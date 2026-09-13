@@ -103,6 +103,10 @@ export const translations = {
         assistantTechnologiesQuestion: 'Which technologies are used?',
         assistantTechnologiesAnswer:
             'The application uses React and JavaScript on the frontend, Django REST Framework on the backend, PostgreSQL as the production database and token authentication for login.',
+        portfolio: 'Portfolio',
+        assistantAuthorQuestion: 'Who created this app?',
+        assistantAuthorAnswer:
+            'This application was created by Michal Růžička, a junior full-stack developer focused on building web applications with React, Django REST Framework and PostgreSQL.'
         },
     cs: {
         appTitle: 'Evidence pojištění',
@@ -207,7 +211,11 @@ export const translations = {
             'Pojistné smlouvy propojují pojištěnce s typem pojištění. Každá smlouva obsahuje předmět pojištění, částku, datum uzavření a datum platnosti.',
         assistantTechnologiesQuestion: 'Jaké technologie aplikace používá?',
         assistantTechnologiesAnswer:
-            'Aplikace používá React a JavaScript na frontendu, Django REST Framework na backendu, PostgreSQL jako produkční databázi a tokenové přihlašování.',     
+            'Aplikace používá React a JavaScript na frontendu, Django REST Framework na backendu, PostgreSQL jako produkční databázi a tokenové přihlašování.',
+        porfolio: 'Webové portfolio',
+        assistantAuthorQuestion: 'Kdo aplikaci vytvořil?',
+        assistantAuthorAnswer: 
+            'Tuto aplikaci vytvořil Michal Růžička, juniorní full-stack vývojář zaměřený na tvorbu webových aplikací pomocí Reactu, Django REST Frameworku a PostgreSQL.'     
     },
 };
 

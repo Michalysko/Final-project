@@ -26,6 +26,11 @@ const assistantTopics = [
         questionKey: 'assistantTechnologiesQuestion',
         answerKey: 'assistantTechnologiesAnswer',
     },
+    {
+        id: 'author',
+        questionKey: 'assistantAuthorQuestion',
+        answerKey: 'assistantAuthorAnswer',
+    },
 ];
 
 function AssistantWidget({ t }) {
@@ -72,6 +77,25 @@ function AssistantWidget({ t }) {
 
                     <div className="assistant-answer">
                         <p>{t[selectedTopic.answerKey]}</p>
+
+                        {selectedTopic.id === 'author' && (
+                            <div className="assistant-links">
+                                <a 
+                                    href="https://michalwebdeveloper.cz"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {t.porfolio}
+                                </a>
+                                <a 
+                                    href="https://github.com/Michalysko"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    GitHub
+                                </a>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
