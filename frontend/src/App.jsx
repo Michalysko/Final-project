@@ -8,6 +8,7 @@ import LoginPage from './pages/LoginPage';
 import MyContractsPage from './pages/MyContractsPage';
 import MyProfilePage from './pages/MyProfilePage';
 import InsuredPersonDetailPage from './pages/InsuredPersonDetailPage';
+import AssistantWidget from './components/AssistantWidget';
 import { translations } from './translations';
 import { apiRequest, getAuthHeaders } from './api/apiClient';
 import './App.css';
@@ -221,6 +222,7 @@ function App() {
                         }
                     />
                 </Routes>
+                <AssistantWidget t={t} />
             </section>
         </main>
     );

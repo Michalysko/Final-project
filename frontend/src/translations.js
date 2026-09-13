@@ -83,7 +83,27 @@ export const translations = {
         demoAdmin: 'Administrator account',
         demoClient: 'Client account',
         demoBackendNote: 'The backend is hosted on a free Render instance, so the first request after inactivity may take a short moment.',
-    },
+        assistantButton: 'Need help?',
+        assistantLabel: 'Demo assistant',
+        assistantTitle: 'How to explore the app',
+        assistantIntro:
+            'Choose a topic and the assistant will explain what this demo application can do.',
+        assistantAdminQuestion: 'What can the administrator do?',
+        assistantAdminAnswer:
+            'The administrator can manage insured people, insurance types and insurance contracts. This includes creating, editing, deleting, searching and viewing detailed records.',
+        assistantClientQuestion: 'What can the client see?',
+        assistantClientAnswer:
+            'The client can view only their own profile and their own insurance contracts. This demonstrates the difference between administrator and client permissions.',
+        assistantInsuredPeopleQuestion: 'How do insured people work?',
+        assistantInsuredPeopleAnswer:
+            'Insured people are customer records with personal information such as name, age, address and phone number. Each insured person can have one or more insurance contracts.',
+        assistantContractsQuestion: 'How do contracts work?',
+        assistantContractsAnswer:
+            'Insurance contracts connect an insured person with an insurance type. Each contract contains the subject, amount, contract date and validity date.',
+        assistantTechnologiesQuestion: 'Which technologies are used?',
+        assistantTechnologiesAnswer:
+            'The application uses React and JavaScript on the frontend, Django REST Framework on the backend, PostgreSQL as the production database and token authentication for login.',
+        },
     cs: {
         appTitle: 'Evidence pojištění',
         languageLabel: 'Jazyk',
@@ -167,7 +187,27 @@ export const translations = {
         demoAccess: 'Demo přístup',
         demoAdmin: 'Administrátorský účet',
         demoClient: 'Klientský účet',
-        demoBackendNote: 'Backend běží na bezplatné službě Render, takže první požadavek po delší neaktivitě může chvíli trvat,',      
+        demoBackendNote: 'Backend běží na bezplatné službě Render, takže první požadavek po delší neaktivitě může chvíli trvat.', 
+        assistantButton: 'Potřebujete poradit?',
+        assistantLabel: 'Demo asistent',
+        assistantTitle: 'Jak si projít aplikaci',
+        assistantIntro:
+            'Vyberte téma a asistent stručně vysvětlí, co tato demo aplikace umí.',
+        assistantAdminQuestion: 'Co může dělat administrátor?',
+        assistantAdminAnswer:
+            'Administrátor může spravovat pojištěnce, typy pojištění a pojistné smlouvy. Může záznamy vytvářet, upravovat, mazat, vyhledávat a zobrazovat jejich detail.',
+        assistantClientQuestion: 'Co vidí klient?',
+        assistantClientAnswer:
+            'Klient vidí pouze svůj vlastní profil a své vlastní pojistné smlouvy. Tím aplikace ukazuje rozdíl mezi oprávněním administrátora a klienta.',
+        assistantInsuredPeopleQuestion: 'Jak fungují pojištěnci?',
+        assistantInsuredPeopleAnswer:
+            'Pojištěnci jsou záznamy klientů s osobními údaji, jako je jméno, věk, adresa a telefonní číslo. Každý pojištěnec může mít jednu nebo více pojistných smluv.',
+        assistantContractsQuestion: 'Jak fungují smlouvy?',
+        assistantContractsAnswer:
+            'Pojistné smlouvy propojují pojištěnce s typem pojištění. Každá smlouva obsahuje předmět pojištění, částku, datum uzavření a datum platnosti.',
+        assistantTechnologiesQuestion: 'Jaké technologie aplikace používá?',
+        assistantTechnologiesAnswer:
+            'Aplikace používá React a JavaScript na frontendu, Django REST Framework na backendu, PostgreSQL jako produkční databázi a tokenové přihlašování.',     
     },
 };
 
